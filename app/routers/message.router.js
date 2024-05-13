@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as messageController from "../controllers/message.controller.js";
+import { controllerWrapper as cw } from "./controlerWrapper.router.js";
 
 export const router = Router();
 
@@ -9,7 +10,7 @@ export const router = Router();
  * @group Messages - Operations on messages
  * @returns {Array<Object>} List of messages.
  */
-router.get("/messages", messageController.getAllMessages);
+router.get("/messages", cw(messageController.getAllMessages));
 
 /**
  * Retrieves a specific message by its ID.
@@ -18,7 +19,7 @@ router.get("/messages", messageController.getAllMessages);
  * @param {string} req.params.id - The unique identifier of the message to retrieve.
  * @returns {Object} The requested message.
  */
-router.get("/messages/:id", messageController.getOneMessage);
+router.get("/messages/:id", cw(messageController.getOneMessage));
 
 /**
  * Creates a new message.
@@ -27,7 +28,7 @@ router.get("/messages/:id", messageController.getOneMessage);
  * @param {Object} req.body - Message data to create.
  * @returns {Object} The created message.
  */
-router.post("/messages", messageController.createMessage);
+router.post("/messages", cw(messageController.createMessage));
 
 /**
  * Updates an existing message.
@@ -37,7 +38,7 @@ router.post("/messages", messageController.createMessage);
  * @param {Object} req.body - Updated message data.
  * @returns {Object} The updated message.
  */
-router.patch("/messages/:id", messageController.updateList);
+router.patch("/messages/:id", cw(messageController.updateList));
 
 /**
  * Deletes an existing message.
@@ -46,4 +47,4 @@ router.patch("/messages/:id", messageController.updateList);
  * @param {string} req.params.id - The unique identifier of the message to delete.
  * @returns {string} Deletion confirmation message.
  */
-router.delete("/messages/:id", messageController.deleteList);
+router.delete("/messages/:id", cw(messageController.deleteList));

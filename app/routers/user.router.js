@@ -1,5 +1,6 @@
 import { Router } from "express";
 import * as userController from "../controllers/user.controller.js";
+import { controllerWrapper as cw } from "./controlerWrapper.router.js";
 
 export const router = Router();
 
@@ -9,7 +10,7 @@ export const router = Router();
  * @group Users - Operations on users
  * @returns {Array<Object>} List of users.
  */
-router.get("/users", userController.getAllUsers);
+router.get("/users", cw(userController.getAllUsers));
 /**
  * Retrieve a specific user by its ID.
  * @route GET /users/{id}
@@ -17,7 +18,7 @@ router.get("/users", userController.getAllUsers);
  * @param {string} req.params.id - The unique identifier of the user to retrieve.
  * @returns {Object} The requested user.
  */
-router.get("/users/:id", userController.getOneUser);
+router.get("/users/:id", cw(userController.getOneUser));
 
 /**
  * Create a new user.
@@ -26,7 +27,7 @@ router.get("/users/:id", userController.getOneUser);
  * @param {Object} req.body - User data to create.
  * @returns {Object} The created user.
  */
-router.post("/users", userController.createUser);
+router.post("/users", cw(userController.createUser));
 
 /**
  * Update an existing user.
@@ -36,7 +37,7 @@ router.post("/users", userController.createUser);
  * @param {Object} req.body - Updated user data.
  * @returns {Object} The updated user.
  */
-router.patch("/users/:id", userController.updateUser);
+router.patch("/users/:id", cw(userController.updateUser));
 
 /**
  * Delete an existing user.
@@ -45,4 +46,4 @@ router.patch("/users/:id", userController.updateUser);
  * @param {string} req.params.id - The unique identifier of the user to delete.
  * @returns {string} Deletion confirmation message.
  */
-router.delete("/users/:id", userController.deleteUser);
+router.delete("/users/:id", cw(userController.deleteUser));
