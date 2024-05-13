@@ -2,8 +2,16 @@
 
 BEGIN;
 
-DROP TABLE "card","list","project","user","project_has_user","tag","card_has_tag","card_has_user";
+DROP TABLE 
+"card_has_user",
+"card_has_tag",
+"tag",
+"project_has_user",
+"card",
+"list",
+"project",
+"user";
 
-DROP DOMAIN "HexColor";
+DROP DOMAIN "hexColor";
 
 COMMIT;
