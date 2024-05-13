@@ -1,5 +1,5 @@
 import express from 'express';
-import router from './app/routers.js';
+import router from './app/routers/routers.js';
 
 require('dotenv').config();
 
