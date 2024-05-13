@@ -14,7 +14,7 @@ CREATE TABLE "user" (
     "lastname" TEXT NOT NULL,
     "code_color" "hexColor" NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "project" (
@@ -22,7 +22,7 @@ CREATE TABLE "project" (
     "name" TEXT NOT NULL,
     "owner_id" INT NOT NULL REFERENCES "user" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "list" (
@@ -32,7 +32,7 @@ CREATE TABLE "list" (
     "code_color" "hexColor" NOT NULL,
     "project_id" INT NOT NULL REFERENCES "project" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "card" (
@@ -40,7 +40,7 @@ CREATE TABLE "card" (
     "position" FLOAT NOT NULL,
     "list_id" INT NOT NULL REFERENCES "list" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "project_has_user" (
@@ -48,7 +48,7 @@ CREATE TABLE "project_has_user" (
     "project_id" INT NOT NULL REFERENCES "project" ("id"),
     "user_id" INT NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "tag" (
@@ -56,7 +56,7 @@ CREATE TABLE "tag" (
     "name" TEXT NOT NULL,
     "code_color" "hexColor" NOT NULL,
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "card_has_tag" (
@@ -64,7 +64,7 @@ CREATE TABLE "card_has_tag" (
     "tag_id" INT NOT NULL REFERENCES "tag" ("id"),
     "card_id" INT NOT NULL REFERENCES "card" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 CREATE TABLE "card_has_user" (
@@ -72,7 +72,7 @@ CREATE TABLE "card_has_user" (
     "user_id" INT NOT NULL REFERENCES "user" ("id"),
     "card_id" INT NOT NULL REFERENCES "card" ("id"),
     "created_at" TIMESTAMPTZ NOT NULL,
-    "updated_at" TIMESTAMPTZ NOT NULL
+    "updated_at" TIMESTAMPTZ
 );
 
 COMMIT;
