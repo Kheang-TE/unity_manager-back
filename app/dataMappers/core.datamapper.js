@@ -1,4 +1,4 @@
-import pool from './client';
+import pool from './client.js';
 
 export default class coreDatamapper {
   constructor(tableName) {
@@ -11,12 +11,12 @@ export default class coreDatamapper {
   }
 
   static async findOne(id) {
-    const result = await pool.query(`SELECT * FROM ${this.tableName} WHERE id LIKE $1`, [id]);
+    const result = await pool.query(`SELECT * FROM ${this.tableName} WHERE id = $1`, [id]);
     return result.rows[0];
   }
 
   static async deleteOne(id) {
-    const result = await pool.query(`DELETE FROM ${this.tableName} WHERE id LIKE $1 RETURNING *`, [id]);
+    const result = await pool.query(`DELETE FROM ${this.tableName} WHERE id = $1 RETURNING *`, [id]);
     return result.rows[0];
   }
 }
