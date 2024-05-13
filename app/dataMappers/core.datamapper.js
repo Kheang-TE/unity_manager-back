@@ -16,7 +16,7 @@ export default class coreDatamapper {
   }
 
   static async deleteOne(id) {
-    const result = await pool.query(`DELETE * FROM ${this.tableName} WHERE id LIKE $1`, [id]);
+    const result = await pool.query(`DELETE FROM ${this.tableName} WHERE id LIKE $1 RETURNING *`, [id]);
     return result.rows[0];
   }
 }
