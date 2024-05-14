@@ -10,12 +10,12 @@ export default class coreDatamapper {
     return result.rows;
   }
 
-  static async findOne(id) {
+  static async findByPk(id) {
     const result = await pool.query(`SELECT * FROM ${this.tableName} WHERE id = $1`, [id]);
     return result.rows[0];
   }
 
-  static async deleteOne(id) {
+  static async deleteByPk(id) {
     const result = await pool.query(`DELETE FROM ${this.tableName} WHERE id = $1 RETURNING *`, [id]);
     return result.rows[0];
   }
