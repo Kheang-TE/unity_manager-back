@@ -1,10 +1,11 @@
 /* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable import/prefer-default-export */
 /* eslint-disable no-unused-vars */
-import { Joi } from "joi";
-import bcrypt from "bcrypt";
-import emailValidator from "email-validator";
-import { User } from "../models";
+
+import bcrypt from 'bcrypt';
+import emailValidator from 'email-validator';
+import Joi from 'joi';
+import { User } from '../models/index.js';
 
 /**
  * Retrieves all users from the database and returns them.
@@ -17,7 +18,7 @@ export async function getAllUsers(req, res) {
   const users = await User.findAll();
   if (!users) {
     res.status(404).json({
-      error: "The requested resource could not be found on the server.",
+      error: 'The requested resource could not be found on the server.',
     });
     return;
   }
@@ -35,13 +36,13 @@ export async function getOneUser(req, res) {
   const userId = +req.params.id;
   if (!Number.isInteger(userId)) {
     res.status(404).json({
-      error: "The requested resource could not be found on the server.",
+      error: 'The requested resource could not be found on the server.',
     });
     return;
   }
   const user = await User.findByPk(userId);
   if (!user) {
-    res.status(404).json({ error: "User not found" });
+    res.status(404).json({ error: 'User not found' });
     return;
   }
   res.status(200).json(user);
@@ -55,14 +56,16 @@ export async function getOneUser(req, res) {
  * @returns {Promise<void>} A promise resolved once the user is created and a response is sent back.
  */
 export async function createUser(req, res) {
-  const { firstname, lastname, email, password, confirmation } = req.body;
+  const {
+    firstname, lastname, email, password, confirmation,
+  } = req.body;
   if (!firstname || !lastname || !email || !password || !confirmation) {
-    res.status(400).json({ error: "Missing body parameter(s)." });
+    res.status(400).json({ error: 'Missing body parameter(s).' });
     return;
   }
   const existingUser = await User.findOne({ where: { email } });
   if (existingUser) {
-    res.status(409).json({ error: "User with that email already exists." });
+    res.status(409).json({ error: 'User with that email already exists.' });
     return;
   }
   const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
@@ -78,7 +81,7 @@ export async function createUser(req, res) {
     lastname: Joi.string().min(1).required(),
     email: Joi.string().email().required(),
     password: Joi.string().min(8).required(),
-    confirmation: Joi.string().valid(Joi.ref("password")).required(),
+    confirmation: Joi.string().valid(Joi.ref('password')).required(),
   });
   const { error } = schema.validate(req.body);
   if (error) {

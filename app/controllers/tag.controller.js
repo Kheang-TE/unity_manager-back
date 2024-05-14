@@ -1,6 +1,6 @@
 // eslint-disable-next-line import/no-unresolved, import/extensions
 import Joi from 'joi';
-import { Tag } from '../models';
+import { Tag } from '../models/index.js';
 
 /**
  * Retrieves all tags from the database and returns them.

@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 // eslint-disable-next-line import/no-unresolved, import/extensions
-import { Joi } from 'joi';
-import { List, Card } from '../models';
+import Joi from "joi";
+import { List, Card } from '../models/index.js';
 
 /**
  * Retrieves all cards from the database and sends them as a JSON response.

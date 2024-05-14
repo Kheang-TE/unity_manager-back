@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import Joi from "joi";
-import { Project } from "../models";
+import { Project } from "../models/index.js";
 
 /**
  * Retrieves all projects from the database and sends them as a JSON response.
