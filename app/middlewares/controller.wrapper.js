@@ -4,13 +4,13 @@
  * @returns {Function} An asynchronous function that wraps around the provided middleware.
  */
 
-export function controllerWrapper(middleware) {
+export default function controllerWrapper(middleware) {
   return async (req, res, next) => {
     try {
       await middleware(req, res, next);
     } catch (error) {
       console.error(error);
-      res.status(500).json({ error: "Unexpected server error" });
+      res.status(500).json({ error: 'Unexpected server error' });
     }
   };
 }

@@ -3,6 +3,7 @@ import listController from '../controllers/list.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
+
 router
   .route('/')
   /**
@@ -51,3 +52,4 @@ router
   .delete('/:id', wrapper(listController.deleteOne.bind(listController)));
 
 export default router;
+

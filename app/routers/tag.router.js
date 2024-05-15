@@ -51,3 +51,4 @@ router
   .delete('/:id', wrapper(tagController.deleteOne.bind(tagController)));
 
 export default router;
+

@@ -12,6 +12,7 @@ router
    * @returns {Array<Object>} List of users.
    */
   .get(wrapper(userController.getAll.bind(userController)))
+
   /**
    * Retrieve a specific user by its ID.
    * @route GET /users/{id}
@@ -50,3 +51,4 @@ router
   .delete('/:id', wrapper(userController.deleteOne.bind(userController)));
 
 export default router;
+
