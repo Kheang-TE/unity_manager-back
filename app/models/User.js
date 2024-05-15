@@ -20,7 +20,7 @@ User.init({
     type: DataTypes.TEXT,
     allowNull: false,
   },
-  color: {
+  code_color: {
     type: DataTypes.TEXT(7),
     allowNull: false,
     defaultValue: '#FFFFFF',
