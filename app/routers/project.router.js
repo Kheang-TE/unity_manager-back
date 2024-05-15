@@ -1,6 +1,7 @@
 import { Router } from "express";
 import projectController from "../controllers/user.controller.js";
 import wrapper from "./../middlewares/controller.wrapper.js";
+import userController from "../controllers/user.controller.js";
 
 const router = Router();
 export default router;
@@ -47,10 +48,11 @@ router.post(
  * @param {Object} req.body - Updated user data.
  * @returns {Object} The updated user.
  */
+/*
 router.patch(
   "/projects/:id",
   wrapper(projectController.updateUser.bind(projectController))
-);
+);*/ 
 
 /**
  * Delete an existing user.

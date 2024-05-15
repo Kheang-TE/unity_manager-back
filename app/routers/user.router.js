@@ -38,10 +38,12 @@ router.post('/users', wrapper(userController.createUser.bind(userController)));
  * @param {Object} req.body - Updated user data.
  * @returns {Object} The updated user.
  */
+
+/*
 router.patch(
   '/users/:id',
   wrapper(userController.updateUser.bind(userController)),
-);
+);*/
 
 /**
  * Delete an existing user.

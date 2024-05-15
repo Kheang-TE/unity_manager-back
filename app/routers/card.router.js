@@ -2,6 +2,9 @@ import { Router } from 'express';
 import cardController from '../controllers/card.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
 
+import ApiError from '../errors/api.error.js';
+import validate from '../validation/validator.js';
+
 const router = Router();
 export default router;
 
@@ -12,6 +15,7 @@ export default router;
  * @returns {Array<Object>} List of cards.
  */
 router.get('/cards', wrapper(cardController.getAll.bind(cardController)));
+
 
 /**
  * Retrieves a specific card by its ID.
@@ -55,3 +59,7 @@ router.delete(
   '/cards/:id',
   wrapper(cardController.deleteOne.bind(cardController)),
 );
+
+router.use((_, __, next) => {
+  next(new ApiError(404, 'Not Found', 'This resource does not exist'));
+});
