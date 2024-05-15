@@ -14,13 +14,15 @@ export default class cardController extends coreController {
    * @returns {Promise<void>} A JSON object containing the newly created card or an error message if the creation fails.
    */
   static async createCard(req, res) {
-    const { name, content, list_id, position } = req.body;
+    const {
+      name, content, list_id, position,
+    } = req.body;
 
     const list = await List.findByPk(list_id);
     if (!list) {
       return res
         .status(404)
-        .json({ error: "The provided list_id does not exist" });
+        .json({ error: 'The provided list_id does not exist' });
     }
 
     const createdCard = await Card.create({
@@ -49,7 +51,7 @@ export default class cardController extends coreController {
     const card = await Card.findByPk(cardId);
 
     if (!card) {
-      return res.status(404).json({ error: "Card not found" });
+      return res.status(404).json({ error: 'Card not found' });
     }
     const {
       name, content, position, list_id,
@@ -58,7 +60,7 @@ export default class cardController extends coreController {
     if (list_id) {
       const list = await List.findByPk(list_id);
       if (!list) {
-        return res.status(404).json({ error: "List not found" });
+        return res.status(404).json({ error: 'List not found' });
       }
     }
 

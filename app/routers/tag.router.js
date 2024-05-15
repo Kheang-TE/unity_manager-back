@@ -12,6 +12,16 @@ router
    * @returns {Array<Object>} List of tags.
    */
   .get(wrapper(tagController.getAll.bind(tagController)))
+  /**
+   * Creates a new tag.
+   * @route POST /tags
+   * @group Tags - Operations on tags
+   * @param {Object} req.body - Tag data to create.
+   * @returns {Object} The created tag.
+   */
+  .post(wrapper(tagController.createTag.bind(tagController)));
+
+router.route('/:id')
 
   /**
    * Retrieves a specific tag by its ID.
@@ -20,16 +30,7 @@ router
    * @param {string} req.params.id - The unique identifier of the tag to retrieve.
    * @returns {Object} The requested tag.
    */
-  .get('/:id', wrapper(tagController.getOne.bind(tagController)))
-
-  /**
-   * Creates a new tag.
-   * @route POST /tags
-   * @group Tags - Operations on tags
-   * @param {Object} req.body - Tag data to create.
-   * @returns {Object} The created tag.
-   */
-  .post(wrapper(tagController.createTag.bind(tagController)))
+  .get(wrapper(tagController.getOne.bind(tagController)))
 
   /**
    * Updates an existing tag.
@@ -39,7 +40,7 @@ router
    * @param {Object} req.body - Updated tag data.
    * @returns {Object} The updated tag.
    */
-  .patch('/:id', wrapper(tagController.updateTag.bind(tagController)))
+  .patch(wrapper(tagController.updateTag.bind(tagController)))
 
   /**
    * Deletes an existing tag.
@@ -48,7 +49,6 @@ router
    * @param {string} req.params.id - The unique identifier of the tag to delete.
    * @returns {string} Deletion confirmation message.
    */
-  .delete('/:id', wrapper(tagController.deleteOne.bind(tagController)));
+  .delete(wrapper(tagController.deleteOne.bind(tagController)));
 
 export default router;
-
