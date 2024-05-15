@@ -14,14 +14,6 @@ export default class projectController extends coreController {
  * @return {Object} The newly created project object or an error message.
  */
   static async createProject(req, res) {
-    const createProjectSchema = Joi.object({
-      name: Joi.string().required(),
-      ownerId: Joi.number().integer().greater(0).required(),
-    });
-    const { error } = createProjectSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
     const { name, owner_Id } = req.body;
     if (!name) {
       return res.status(404).json({ error: 'The provided name does not exist' });
@@ -45,23 +37,11 @@ export default class projectController extends coreController {
     if (!Number.isInteger(projectId)) {
       return res.status(400).json({ error: 'Project not found' });
     }
-    const UpdateProjectSchema = Joi.object({
-      name: Joi.string(),
-      owner_Id: Joi.number().integer().greater(0),
-    });
-    const { error } = UpdateProjectSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
-
     const { name, owner_Id } = req.body;
-
     const project = await Project.findByPk(projectId);
-
     if (!project) {
       return res.status(404).json({ error: 'Project not found' });
     }
-
     if (owner_Id) {
       const owner = await Project.findByPk(owner_Id);
       if (!owner) {

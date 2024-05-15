@@ -12,11 +12,11 @@ import errorMiddleware from '../middlewares/error.middleware.js';
 
 const router = Router();
 
-router.use(listRouter);
-router.use(cardRouter);
-router.use(tagRouter);
-router.use(userRouter);
-router.use(projectRouter);
+router.use('/lists', listRouter);
+router.use('/cards', cardRouter);
+router.use('/tags', tagRouter);
+router.use('/users', userRouter);
+router.use('/projects', projectRouter);
 // router.use(messageRouter);
 
 // Middleware 404 (API)

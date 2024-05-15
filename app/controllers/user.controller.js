@@ -33,19 +33,6 @@ export default class userController extends coreController {
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
     const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
 
-    const schema = Joi.object({
-      firstname: Joi.string().min(1).required(),
-      lastname: Joi.string().min(1).required(),
-      email: Joi.string().email().required(),
-      code_color: Joi.string().required(),
-      password: Joi.string().min(8).required(),
-      confirmation: Joi.string().valid(Joi.ref('password')).required(),
-    });
-    const { error } = schema.validate(req.body);
-    if (error) {
-      res.status(400).json({ error: error.message });
-      return;
-    }
     const user = await User.create({
       firstname,
       lastname,
