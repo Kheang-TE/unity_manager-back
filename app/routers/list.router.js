@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import listController from '../controllers/list.controller.js';
-import wrapper from './../middlewares/controller.wrapper.js';
+import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
 router

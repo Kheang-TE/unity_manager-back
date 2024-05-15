@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import tagController from '../controllers/tag.controller.js';
-import wrapper from './../middlewares/controller.wrapper.js';
+import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
 router

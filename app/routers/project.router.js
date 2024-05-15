@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import projectController from '../controllers/user.controller.js';
-import wrapper from './../middlewares/controller.wrapper.js';
+import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
 router
@@ -29,7 +29,7 @@ router
    * @param {Object} req.body - User data to create.
    * @returns {Object} The created user.
    */
-  .post(wrapper(projectController.createUser.bind(projectController)))
+  .post(wrapper(projectController.createproject.bind(projectController)))
 
   /**
    * Update an existing user.
@@ -39,7 +39,10 @@ router
    * @param {Object} req.body - Updated user data.
    * @returns {Object} The updated user.
    */
-  .patch('/:id', wrapper(projectController.updateUser.bind(projectController)))
+  .patch(
+    '/:id',
+    wrapper(projectController.updateproject.bind(projectController))
+  )
 
   /**
    * Delete an existing user.
