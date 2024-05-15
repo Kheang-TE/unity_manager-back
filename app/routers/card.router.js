@@ -1,8 +1,9 @@
 import { Router } from "express";
-import * as cardController from "../controllers/card.controller.js";
-import { controllerWrapper as cw } from "./controlerWrapper.router.js";
+import cardController from "../controllers/card.controller.js";
+import wrapper from "./../middlewares/controller.wrapper.js";
 
-export const router = Router();
+const router = Router();
+export default router;
 
 /**
  * Retrieves all cards.
@@ -10,7 +11,7 @@ export const router = Router();
  * @group Cards - Operations on cards
  * @returns {Array<Object>} List of cards.
  */
-router.get("/cards", cw(cardController.getAllCards));
+router.get("/cards", wrapper(cardController.getAll.bind(cardController)));
 
 /**
  * Retrieves a specific card by its ID.
@@ -19,7 +20,7 @@ router.get("/cards", cw(cardController.getAllCards));
  * @param {string} req.params.id - The unique identifier of the card to retrieve.
  * @returns {Object} The requested card.
  */
-router.get("/cards/:id", cw(cardController.getOneCard));
+router.get("/cards/:id", wrapper(cardController.getOne.bind(cardController)));
 
 /**
  * Creates a new card.
@@ -28,7 +29,7 @@ router.get("/cards/:id", cw(cardController.getOneCard));
  * @param {Object} req.body - Card data to create.
  * @returns {Object} The created card.
  */
-router.post("/cards", cw(cardController.createCard));
+router.post("/cards", wrapper(cardController.createCard.bind(cardController)));
 
 /**
  * Updates an existing card.
@@ -38,7 +39,10 @@ router.post("/cards", cw(cardController.createCard));
  * @param {Object} req.body - Updated card data.
  * @returns {Object} The updated card.
  */
-router.patch("/cards/:id", cw(cardController.updateCard));
+router.patch(
+  "/cards/:id",
+  wrapper(cardController.updateCard.bind(cardController))
+);
 
 /**
  * Deletes an existing card.
@@ -47,4 +51,7 @@ router.patch("/cards/:id", cw(cardController.updateCard));
  * @param {string} req.params.id - The unique identifier of the card to delete.
  * @returns {string} Deletion confirmation message.
  */
-router.delete("/cards/:id", cw(cardController.deleteCard));
+router.delete(
+  "/cards/:id",
+  wrapper(cardController.deleteOne.bind(cardController))
+);
