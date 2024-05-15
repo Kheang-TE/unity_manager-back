@@ -4,7 +4,6 @@ import sequelize from './sequelizeClient.js';
 export default class List extends Model {}
 
 List.init({
-
   name: {
     type: DataTypes.TEXT,
     allowNull: false,

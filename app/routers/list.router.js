@@ -1,6 +1,6 @@
-import { Router } from "express";
-import listController from "../controllers/list.controller.js";
-import wrapper from "./../middlewares/controller.wrapper.js";
+import { Router } from 'express';
+import listController from '../controllers/list.controller.js';
+import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
 export default router;
@@ -10,7 +10,7 @@ export default router;
  * @group Lists - Operations on lists
  * @returns {Array<Object>} List of lists.
  */
-router.get("/lists", wrapper(listController.getAll.bind(listController)));
+router.get('/lists', wrapper(listController.getAll.bind(listController)));
 
 /**
  * Retrieves a specific list by its ID.
@@ -19,7 +19,7 @@ router.get("/lists", wrapper(listController.getAll.bind(listController)));
  * @param {string} req.params.id - The unique identifier of the list to retrieve.
  * @returns {Object} The requested list.
  */
-router.get("/lists/:id", wrapper(listController.getOne.bind(listController)));
+router.get('/lists/:id', wrapper(listController.getOne.bind(listController)));
 
 /**
  * Creates a new list.
@@ -28,7 +28,7 @@ router.get("/lists/:id", wrapper(listController.getOne.bind(listController)));
  * @param {Object} req.body - List data to create.
  * @returns {Object} The created list.
  */
-router.post("/lists", wrapper(listController.createList.bind(listController)));
+router.post('/lists', wrapper(listController.createList.bind(listController)));
 
 /**
  * Updates an existing list.
@@ -39,8 +39,8 @@ router.post("/lists", wrapper(listController.createList.bind(listController)));
  * @returns {Object} The updated list.
  */
 router.patch(
-  "/lists/:id",
-  wrapper(listController.updateList.bind(listController))
+  '/lists/:id',
+  wrapper(listController.updateList.bind(listController)),
 );
 
 /**
@@ -51,6 +51,6 @@ router.patch(
  * @returns {string} Deletion confirmation message.
  */
 router.delete(
-  "/lists/:id",
-  wrapper(listController.deleteOne.bind(listController))
+  '/lists/:id',
+  wrapper(listController.deleteOne.bind(listController)),
 );

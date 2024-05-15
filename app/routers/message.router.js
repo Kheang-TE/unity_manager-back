@@ -1,8 +1,8 @@
-import { Router } from "express";
-//import * as messageController from "../controllers/message.controller.js";
-import { controllerWrapper as wrapper } from "./controlerWrapper.router.js";
+import { Router } from 'express';
+// import * as messageController from "../controllers/message.controller.js";
+import { controllerWrapper as wrapper } from './controlerWrapper.router.js';
 
-export const router = Router();
+// export const router = Router();
 
 /**
  * Retrieves all messages.
@@ -10,7 +10,7 @@ export const router = Router();
  * @group Messages - Operations on messages
  * @returns {Array<Object>} List of messages.
  */
-router.get("/messages", wrapper(messageController.getAllMessages));
+router.get('/messages', wrapper(messageController.getAllMessages));
 
 /**
  * Retrieves a specific message by its ID.
@@ -19,7 +19,7 @@ router.get("/messages", wrapper(messageController.getAllMessages));
  * @param {string} req.params.id - The unique identifier of the message to retrieve.
  * @returns {Object} The requested message.
  */
-router.get("/messages/:id", wrapper(messageController.getOneMessage));
+router.get('/messages/:id', wrapper(messageController.getOneMessage));
 
 /**
  * Creates a new message.
@@ -28,7 +28,7 @@ router.get("/messages/:id", wrapper(messageController.getOneMessage));
  * @param {Object} req.body - Message data to create.
  * @returns {Object} The created message.
  */
-router.post("/messages", wrapper(messageController.createMessage));
+router.post('/messages', wrapper(messageController.createMessage));
 
 /**
  * Updates an existing message.
@@ -38,7 +38,7 @@ router.post("/messages", wrapper(messageController.createMessage));
  * @param {Object} req.body - Updated message data.
  * @returns {Object} The updated message.
  */
-router.patch("/messages/:id", wrapper(messageController.updateList));
+router.patch('/messages/:id', wrapper(messageController.updateList));
 
 /**
  * Deletes an existing message.
@@ -47,4 +47,4 @@ router.patch("/messages/:id", wrapper(messageController.updateList));
  * @param {string} req.params.id - The unique identifier of the message to delete.
  * @returns {string} Deletion confirmation message.
  */
-router.delete("/messages/:id", wrapper(messageController.deleteList));
+router.delete('/messages/:id', wrapper(messageController.deleteList));

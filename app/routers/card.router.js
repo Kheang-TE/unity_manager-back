@@ -1,6 +1,6 @@
-import { Router } from "express";
-import cardController from "../controllers/card.controller.js";
-import wrapper from "./../middlewares/controller.wrapper.js";
+import { Router } from 'express';
+import cardController from '../controllers/card.controller.js';
+import wrapper from '../middlewares/controller.wrapper.js';
 
 const router = Router();
 export default router;
@@ -11,7 +11,7 @@ export default router;
  * @group Cards - Operations on cards
  * @returns {Array<Object>} List of cards.
  */
-router.get("/cards", wrapper(cardController.getAll.bind(cardController)));
+router.get('/cards', wrapper(cardController.getAll.bind(cardController)));
 
 /**
  * Retrieves a specific card by its ID.
@@ -20,7 +20,7 @@ router.get("/cards", wrapper(cardController.getAll.bind(cardController)));
  * @param {string} req.params.id - The unique identifier of the card to retrieve.
  * @returns {Object} The requested card.
  */
-router.get("/cards/:id", wrapper(cardController.getOne.bind(cardController)));
+router.get('/cards/:id', wrapper(cardController.getOne.bind(cardController)));
 
 /**
  * Creates a new card.
@@ -29,7 +29,7 @@ router.get("/cards/:id", wrapper(cardController.getOne.bind(cardController)));
  * @param {Object} req.body - Card data to create.
  * @returns {Object} The created card.
  */
-router.post("/cards", wrapper(cardController.createCard.bind(cardController)));
+router.post('/cards', wrapper(cardController.createCard.bind(cardController)));
 
 /**
  * Updates an existing card.
@@ -40,8 +40,8 @@ router.post("/cards", wrapper(cardController.createCard.bind(cardController)));
  * @returns {Object} The updated card.
  */
 router.patch(
-  "/cards/:id",
-  wrapper(cardController.updateCard.bind(cardController))
+  '/cards/:id',
+  wrapper(cardController.updateCard.bind(cardController)),
 );
 
 /**
@@ -52,6 +52,6 @@ router.patch(
  * @returns {string} Deletion confirmation message.
  */
 router.delete(
-  "/cards/:id",
-  wrapper(cardController.deleteOne.bind(cardController))
+  '/cards/:id',
+  wrapper(cardController.deleteOne.bind(cardController)),
 );
