@@ -1,5 +1,4 @@
 // eslint-disable-next-line import/no-unresolved, import/extensions
-import Joi from 'joi';
 import { Tag } from '../models/index.js';
 import coreController from './core.controller.js';
 
@@ -20,15 +19,7 @@ export default class tagController extends coreController {
         error: "Missing body parameter or invalid format: 'name'.",
       });
     }
-    const createTagVerificationError = Joi.object({
-      name: Joi.string().min(1),
-      code_color: Joi.string().length(7),
-    });
 
-    const { error } = createTagVerificationError.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
     const newTag = await Tag.create({ name });
     return res.status(200).json(newTag);
   }
@@ -51,16 +42,7 @@ export default class tagController extends coreController {
     if (!Number.isInteger(tagId)) {
       return res.status(404).json({ error: 'The ID of tag is not defined. ' });
     }
-    const updateTagSchema = Joi.object({
-      name: Joi.string().min(1),
-    })
-      .min(1)
-      .message("At least property 'name' or' should be provided.");
 
-    const { error } = updateTagSchema.validate(req.body);
-    if (error) {
-      return res.status(400).json({ error: error.message });
-    }
     const updateOneTag = await Tag.findByPk(tagId);
     await updateOneTag.update(body);
     await updateOneTag.save();
