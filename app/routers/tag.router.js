@@ -1,8 +1,9 @@
 import { Router } from "express";
-import * as tagController from "../controllers/tag.controller.js";
-import { controllerWrapper as cw } from "./controlerWrapper.router.js";
+import tagController from "../controllers/tag.controller.js";
+import wrapper from "./../middlewares/controller.wrapper.js";
 
-export const router = Router();
+const router = Router();
+export default router;
 
 /**
  * Retrieves all tags.
@@ -10,7 +11,7 @@ export const router = Router();
  * @group Tags - Operations on tags
  * @returns {Array<Object>} List of tags.
  */
-router.get("/tags", cw(tagController.getAllTags));
+router.get("/tags", wrapper(tagController.getAll.bind(tagController)));
 
 /**
  * Retrieves a specific tag by its ID.
@@ -19,7 +20,7 @@ router.get("/tags", cw(tagController.getAllTags));
  * @param {string} req.params.id - The unique identifier of the tag to retrieve.
  * @returns {Object} The requested tag.
  */
-router.get("/tags/:id", cw(tagController.getOneTag));
+router.get("/tags/:id", wrapper(tagController.getOne.bind(tagController)));
 
 /**
  * Creates a new tag.
@@ -28,7 +29,7 @@ router.get("/tags/:id", cw(tagController.getOneTag));
  * @param {Object} req.body - Tag data to create.
  * @returns {Object} The created tag.
  */
-router.post("/tags", cw(tagController.createTag));
+router.post("/tags", wrapper(tagController.createTag.bind(tagController)));
 
 /**
  * Updates an existing tag.
@@ -38,7 +39,7 @@ router.post("/tags", cw(tagController.createTag));
  * @param {Object} req.body - Updated tag data.
  * @returns {Object} The updated tag.
  */
-router.patch("/tags/:id", cw(tagController.updateTag));
+router.patch("/tags/:id", wrapper(tagController.updateTag.bind(tagController)));
 
 /**
  * Deletes an existing tag.
@@ -47,4 +48,7 @@ router.patch("/tags/:id", cw(tagController.updateTag));
  * @param {string} req.params.id - The unique identifier of the tag to delete.
  * @returns {string} Deletion confirmation message.
  */
-router.delete("/tags/:id", cw(tagController.deleteTag));
+router.delete(
+  "/tags/:id",
+  wrapper(tagController.deleteOne.bind(tagController))
+);
