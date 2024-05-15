@@ -41,6 +41,7 @@ router
    */
   .patch('/:id', wrapper(userController.updateUser.bind(userController)))
 
+
   /**
    * Delete an existing user.
    * @route DELETE /users/{id}
@@ -51,4 +52,5 @@ router
   .delete('/:id', wrapper(userController.deleteOne.bind(userController)));
 
 export default router;
+
 

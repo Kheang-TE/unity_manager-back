@@ -7,20 +7,20 @@ export default class cardController extends coreController {
   static tableName = Card;
 
   /**
- * Creates a new card in the database and sends it as a JSON response.
- * @async
- * @param {Object} req - The HTTP request object containing the card data.
- * @param {Object} res - The HTTP response object.
- * @returns {Promise<void>} A JSON object containing the newly created card or an error message if the creation fails.
- */
+   * Creates a new card in the database and sends it as a JSON response.
+   * @async
+   * @param {Object} req - The HTTP request object containing the card data.
+   * @param {Object} res - The HTTP response object.
+   * @returns {Promise<void>} A JSON object containing the newly created card or an error message if the creation fails.
+   */
   static async createCard(req, res) {
-    const {
-      name, content, list_id, position,
-    } = req.body;
+    const { name, content, list_id, position } = req.body;
 
     const list = await List.findByPk(list_id);
     if (!list) {
-      return res.status(404).json({ error: 'The provided list_id does not exist' });
+      return res
+        .status(404)
+        .json({ error: "The provided list_id does not exist" });
     }
 
     const createdCard = await Card.create({
@@ -33,12 +33,12 @@ export default class cardController extends coreController {
   }
 
   /**
- * Updates a card in the database by its ID and sends the updated card as a JSON response.
- * @async
- * @param {Object} req - The HTTP request object containing the ID of the card to update and the updated card data.
- * @param {Object} res - The HTTP response object.
- * @returns {Promise<void>} A JSON object containing the updated card or an error message if the update fails.
- */
+   * Updates a card in the database by its ID and sends the updated card as a JSON response.
+   * @async
+   * @param {Object} req - The HTTP request object containing the ID of the card to update and the updated card data.
+   * @param {Object} res - The HTTP response object.
+   * @returns {Promise<void>} A JSON object containing the updated card or an error message if the update fails.
+   */
   static async updateCard(req, res) {
     const cardId = +req.params.id;
 
@@ -49,7 +49,7 @@ export default class cardController extends coreController {
     const card = await Card.findByPk(cardId);
 
     if (!card) {
-      return res.status(404).json({ error: 'Card not found' });
+      return res.status(404).json({ error: "Card not found" });
     }
     const {
       name, content, position, list_id,
@@ -58,7 +58,7 @@ export default class cardController extends coreController {
     if (list_id) {
       const list = await List.findByPk(list_id);
       if (!list) {
-        return res.status(404).json({ error: 'List not found' });
+        return res.status(404).json({ error: "List not found" });
       }
     }
 

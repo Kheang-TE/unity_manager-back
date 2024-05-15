@@ -2,6 +2,9 @@ import { Router } from 'express';
 import cardController from '../controllers/card.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
 
+import ApiError from '../errors/api.error.js';
+import validate from '../validation/validator.js';
+
 const router = Router();
 
 router
@@ -50,5 +53,6 @@ router
    * @returns {string} Deletion confirmation message.
    */
   .delete('/:id', wrapper(cardController.deleteOne.bind(cardController)));
+
 
 export default router;

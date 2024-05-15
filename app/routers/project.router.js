@@ -1,3 +1,4 @@
+
 import { Router } from 'express';
 import projectController from '../controllers/user.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
@@ -52,5 +53,6 @@ router
    * @returns {string} Deletion confirmation message.
    */
   .delete('/:id', wrapper(projectController.deleteOne.bind(userController)));
+
 
 export default router;
