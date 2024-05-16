@@ -1,4 +1,3 @@
-import Joi from 'joi';
 import ApiError from '../errors/api.error.js';
 
 export default class coreController {
@@ -25,9 +24,9 @@ export default class coreController {
    * @param {Object} res - The response object
    * @return {Object} The JSON response containing all retrieved data
    */
-  static async getOne(req, res, next) {
+  static async getOne(req, res) {
     const id = +req.params.id;
-    if (isNaN(id)) {
+    if (!Number.isInteger(id)) {
       throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
     }
     const result = await this.tableName.findByPk(id);
@@ -46,7 +45,7 @@ export default class coreController {
    */
   static async deleteOne(req, res) {
     const id = +req.params.id;
-    if (isNaN(id)) {
+    if (!Number.isInteger(id)) {
       throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
     }
     const result = await this.tableName.findByPk(id);
@@ -79,7 +78,7 @@ export default class coreController {
    */
   static async update(req, res) {
     const id = +req.params.id;
-    if (isNaN(id)) {
+    if (!Number.isInteger(id)) {
       throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
     }
     const input = req.body;

@@ -5,6 +5,6 @@ export default Joi.object({
   lastname: Joi.string().min(1),
   email: Joi.string().email(),
   code_color: Joi.string(),
-  password: Joi.string().min(8),
-  confirmation: Joi.string().valid(Joi.ref('password')),
+  password: Joi.string().min(8).required(),
+  confirmation: Joi.string().valid(Joi.ref('password')).required(),
 }).min(1);
