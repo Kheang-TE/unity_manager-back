@@ -1,50 +1,35 @@
-// import { Router } from "express";
-// import * as messageController from "../controllers/message.controller.js";
-// import { controllerWrapper as cw } from "./controlerWrapper.router.js";
+import { Router } from 'express';
+// import * as messageController from '../controllers/message.controller.js';
+import controllerWrapper from '../middlewares/controller.wrapper.js';
+import messageController from '../controllers/message.controller.js';
+import createSchema from '../schemas/message.create.schema.js';
+import updateSchema from '../schemas/message.update.schema.js';
+import validationMiddleware from '../middlewares/validation.middleware.js';
 
-// export const router = Router();
+const router = Router();
+export default router;
+router
+  .route('/messages')
+  /**
+   * Retrieves all messages.
+   * @route GET /messages
+   * @group Messages - Operations on messages
+   * @returns {Array<Object>} List of messages.
+   */
+  .get(controllerWrapper(messageController.getAll))
 
-// /**
-//  * Retrieves all messages.
-//  * @route GET /messages
-//  * @group Messages - Operations on messages
-//  * @returns {Array<Object>} List of messages.
-//  */
-// router.get("/messages", cw(messageController.getAllMessages));
+  .post(validationMiddleware(createSchema, 'body'), controllerWrapper(messageController.create));
 
-// /**
-//  * Retrieves a specific message by its ID.
-//  * @route GET /messages/{id}
-//  * @group Messages - Operations on messages
-//  * @param {string} req.params.id - The unique identifier of the message to retrieve.
-//  * @returns {Object} The requested message.
-//  */
-// router.get("/messages/:id", cw(messageController.getOneMessage));
+router.route('/messages/:id')
+  /**
+   * Retrieves a specific message by its ID.
+   * @route GET /messages/{id}
+   * @group Messages - Operations on messages
+   * @param {string} req.params.id - The unique identifier of the message to retrieve.
+   * @returns {Object} The requested message.
+   */
+  .get(controllerWrapper(messageController.getOne))
 
-// /**
-//  * Creates a new message.
-//  * @route POST /messages
-//  * @group Messages - Operations on messages
-//  * @param {Object} req.body - Message data to create.
-//  * @returns {Object} The created message.
-//  */
-// router.post("/messages", cw(messageController.createMessage));
+  .patch(validationMiddleware(updateSchema, 'body'), controllerWrapper(messageController.update))
 
-// /**
-//  * Updates an existing message.
-//  * @route PATCH /messages/{id}
-//  * @group Messages - Operations on messages
-//  * @param {string} req.params.id - The unique identifier of the message to update.
-//  * @param {Object} req.body - Updated message data.
-//  * @returns {Object} The updated message.
-//  */
-// router.patch("/messages/:id", cw(messageController.updateList));
-
-// /**
-//  * Deletes an existing message.
-//  * @route DELETE /messages/{id}
-//  * @group Messages - Operations on messages
-//  * @param {string} req.params.id - The unique identifier of the message to delete.
-//  * @returns {string} Deletion confirmation message.
-//  */
-// router.delete("/messages/:id", cw(messageController.deleteList));
+  .delete(controllerWrapper(messageController.deleteOne));
