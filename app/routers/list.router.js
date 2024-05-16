@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import listController from '../controllers/list.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
+import createSchema from '../schemas/list.create.schema.js';
+import updateSchema from '../schemas/list.update.schema.js';
+import validationMiddleware from '../middlewares/validation.middleware.js';
 
 const router = Router();
 
@@ -20,7 +23,7 @@ router
    * @param {Object} req.body - List data to create.
    * @returns {Object} The created list.
    */
-  .post(wrapper(listController.createList.bind(listController)));
+  .post(validationMiddleware(createSchema, 'body'), wrapper(listController.create.bind(listController)));
 
 router.route('/:id')
   /**
@@ -40,7 +43,7 @@ router.route('/:id')
    * @param {Object} req.body - Updated list data.
    * @returns {Object} The updated list.
    */
-  .patch(wrapper(listController.updateList.bind(listController)))
+  .patch(validationMiddleware(updateSchema, 'body'), wrapper(listController.update.bind(listController)))
 
   /**
    * Deletes an existing list.
