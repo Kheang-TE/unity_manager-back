@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt';
 import Joi from 'joi';
 import { User } from '../models/index.js';
 import coreController from './core.controller.js';
+import ApiError from '../errors/api.error.js';
 
 export default class userController extends coreController {
   static tableName = User;
@@ -21,14 +22,9 @@ export default class userController extends coreController {
     const {
       firstname, lastname, email, password, code_color, confirmation,
     } = req.body;
-    if (!firstname || !lastname || !email || !password || !code_color || !confirmation) {
-      res.status(400).json({ error: 'Missing body parameter(s).' });
-      return;
-    }
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      res.status(409).json({ error: 'User with that email already exists.' });
-      return;
+      throw new ApiError(409, 'Conflict', 'User with that email already exists.');
     }
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
     const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
