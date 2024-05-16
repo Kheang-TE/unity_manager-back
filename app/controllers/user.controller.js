@@ -3,7 +3,6 @@
 /* eslint-disable no-unused-vars */
 
 import bcrypt from 'bcrypt';
-import Joi from 'joi';
 import { User } from '../models/index.js';
 import coreController from './core.controller.js';
 
