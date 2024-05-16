@@ -8,12 +8,20 @@
  */
 
 export default (err, req, res, next) => {
-  let { status, message } = err;
-  const { code } = err;
+  let {
+    status, message, details,
+  } = err;
+  const code = err.original?.code || err.parent?.code || err.code;
 
   if (code === '23505') {
     status = 400;
     message = 'Resource already exists';
+    details = err.original?.detail || err.parent?.detail;
+  }
+  if (code === '23503') {
+    status = 400;
+    message = 'Foreign_key_violation';
+    details = err.original?.detail || err.parent?.detail;
   }
 
   if (!status) {
@@ -35,5 +43,7 @@ export default (err, req, res, next) => {
     });
   }
 
-  return res.status(status).json({ error: message });
+  return res.status(status).json({
+    status, error: message, details,
+  });
 };
