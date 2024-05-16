@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import userController from '../controllers/user.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
+import createSchema from '../schemas/user.create.schema.js';
+import updateSchema from '../schemas/user.update.schema.js';
+import validationMiddleware from '../middlewares/validation.middleware.js';
 
 const router = Router();
 router
@@ -20,7 +23,7 @@ router
    * @param {Object} req.body - User data to create.
    * @returns {Object} The created user.
    */
-  .post(wrapper(userController.createUser.bind(userController)));
+  .post(validationMiddleware(createSchema, 'body'), wrapper(userController.createUser.bind(userController)));
 
 router.route('/:id')
 

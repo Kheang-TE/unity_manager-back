@@ -24,7 +24,7 @@ router
    * @param {Object} req.body - Card data to create.
    * @returns {Object} The created card.
    */
-  .post(validationMiddleware(createSchema, 'body'), wrapper(cardController.createCard.bind(cardController)));
+  .post(validationMiddleware(createSchema, 'body'), wrapper(cardController.create.bind(cardController)));
 
 router.route('/:id')
   /**
@@ -43,7 +43,7 @@ router.route('/:id')
    * @param {Object} req.body - Updated card data.
    * @returns {Object} The updated card.
    */
-  .patch(validationMiddleware(updateSchema, 'body'), wrapper(cardController.updateCard.bind(cardController)))
+  .patch(validationMiddleware(updateSchema, 'body'), wrapper(cardController.update.bind(cardController)))
 
   /**
    * Deletes an existing card.

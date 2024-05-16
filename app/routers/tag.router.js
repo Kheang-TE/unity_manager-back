@@ -1,6 +1,9 @@
 import { Router } from 'express';
 import tagController from '../controllers/tag.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
+import createSchema from '../schemas/tag.create.schema.js';
+import updateSchema from '../schemas/tag.update.schema.js';
+import validationMiddleware from '../middlewares/validation.middleware.js';
 
 const router = Router();
 router
@@ -19,7 +22,7 @@ router
    * @param {Object} req.body - Tag data to create.
    * @returns {Object} The created tag.
    */
-  .post(wrapper(tagController.createTag.bind(tagController)));
+  .post(validationMiddleware(createSchema, 'body'), wrapper(tagController.create.bind(tagController)));
 
 router.route('/:id')
 
@@ -40,7 +43,7 @@ router.route('/:id')
    * @param {Object} req.body - Updated tag data.
    * @returns {Object} The updated tag.
    */
-  .patch(wrapper(tagController.updateTag.bind(tagController)))
+  .patch(validationMiddleware(updateSchema, 'body'), wrapper(tagController.update.bind(tagController)))
 
   /**
    * Deletes an existing tag.
