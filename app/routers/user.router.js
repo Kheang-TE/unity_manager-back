@@ -3,6 +3,7 @@ import userController from '../controllers/user.controller.js';
 import wrapper from '../middlewares/controller.wrapper.js';
 import createSchema from '../schemas/user.create.schema.js';
 import updateSchema from '../schemas/user.update.schema.js';
+import signinSchema from '../schemas/user.signin.schema.js';
 import validationMiddleware from '../middlewares/validation.middleware.js';
 
 const router = Router();
@@ -24,7 +25,9 @@ router
    * @returns {Object} The created user.
    */
   .post(validationMiddleware(createSchema, 'body'), wrapper(userController.createUser.bind(userController)));
+router.route('/signin')
 
+  .post(validationMiddleware(signinSchema, 'body'), wrapper(userController.signIn.bind(userController)));
 router.route('/:id')
 
   /**
@@ -43,7 +46,7 @@ router.route('/:id')
    * @param {Object} req.body - Updated user data.
    * @returns {Object} The updated user.
    */
-// .patch(wrapper(userController.updateUser.bind(userController)))
+  .patch(validationMiddleware(updateSchema, 'body'), wrapper(userController.updateUser.bind(userController)))
 
   /**
    * Delete an existing user.
