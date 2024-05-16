@@ -1,6 +1,6 @@
 import 'dotenv/config';
 
-import { Sequelize } from 'sequelize';
+import Sequelize from 'sequelize';
 
 const sequelize = new Sequelize(process.env.PG_URL, {
   define: {
@@ -13,9 +13,9 @@ const sequelize = new Sequelize(process.env.PG_URL, {
 (async () => {
   try {
     await sequelize.authenticate();
-    console.log('Connection has been established successfully.');
+    console.log('Connected to the postgres database.');
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error('Unable to connect to the postgres database:', error);
   }
 })();
 
