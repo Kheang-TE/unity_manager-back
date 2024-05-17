@@ -3,7 +3,10 @@
 /* eslint-disable no-unused-vars */
 
 import bcrypt from 'bcrypt';
-import { User } from '../models/index.js';
+import Jwt from 'jsonwebtoken';
+import {
+  Card, List, Project, Tag, User,
+} from '../models/index.js';
 import coreController from './core.controller.js';
 import ApiError from '../errors/api.error.js';
 
@@ -61,7 +64,7 @@ export default class userController extends coreController {
     await user.update({
       firstname, lastname, email, password: hashedPassword, code_color,
     });
-    return res.json(user);
+    res.json(user);
   }
 
   static async signIn(req, res) {
@@ -77,6 +80,53 @@ export default class userController extends coreController {
       throw new ApiError(401, 'Unauthorized', 'Email or password is incorrect');
     }
 
-    res.status(200).json(user);
+    const accessToken = Jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+
+    res.json({ accessToken });
+  }
+
+  static async getUserBoard(req, res) {
+    const id = +req.user.id;
+    if (!Number.isInteger(id)) {
+      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+    }
+    const result = await User.findByPk(id, {
+      include: [{
+        model: Project,
+        as: 'projects',
+        through: { attributes: [] },
+        include: [
+          {
+            model: User, // Les collaborateurs des projets
+            attributes: ['id', 'firstname', 'lastname'],
+            as: 'collaborators',
+            through: { attributes: [] },
+          },
+          {
+            model: List, // Les listes du projet
+            attributes: ['id', 'name', 'position', 'code_color'],
+            as: 'lists',
+            include: [{
+              model: Card, // Les cartes des listes
+              attributes: ['id', 'name', 'content', 'position'],
+              as: 'cards',
+              include: [{
+                model: User, // L'utilisateur associé à chaque carte
+                attributes: ['firstname', 'lastname'],
+                through: { attributes: [] },
+                as: 'users',
+              },
+              {
+                model: Tag, // Les tags des cartes
+                attributes: ['id', 'name', 'code_color'],
+                through: { attributes: [] },
+                as: 'tags',
+              }],
+            }],
+          },
+        ],
+      }],
+    });
+    res.json(result);
   }
 }
