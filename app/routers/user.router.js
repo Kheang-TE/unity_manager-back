@@ -5,6 +5,7 @@ import createSchema from '../schemas/user.create.schema.js';
 import updateSchema from '../schemas/user.update.schema.js';
 import signinSchema from '../schemas/user.signin.schema.js';
 import validationMiddleware from '../middlewares/validation.middleware.js';
+// import authMiddleware from '../middlewares/authentification.middleware.js';
 
 const router = Router();
 router

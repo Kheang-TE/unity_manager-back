@@ -11,7 +11,7 @@ export default (req, res, next) => {
     if (!decoded) {
       throw new ApiError(401, 'Unauthorized', 'Invalid token');
     }
-    req.user = decoded;// a voir si faut pas utiliser req.body, mon est pas stoquer dans req.user
+    req.user = decoded;
     next();
   } catch (error) {
     next(new ApiError(401, 'Unauthorized', "You don't have access to this resource"));

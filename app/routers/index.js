@@ -13,11 +13,11 @@ import authMiddleware from '../middlewares/authentification.middleware.js';
 // import { router as messageRouter } from "./message.router.js";
 
 const router = Router();
+router.use('/users', userRouter);
 router.use(authMiddleware);
 router.use('/lists', listRouter);
 router.use('/cards', cardRouter);
 router.use('/tags', tagRouter);
-router.use('/users', userRouter);
 router.use('/projects', projectRouter);
 router.use(messageRouter);
 
