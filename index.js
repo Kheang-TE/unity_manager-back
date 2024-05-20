@@ -1,21 +1,11 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import router from './app/routers/index.js';
-import mongooseConnexion from './app/models/mongooseClient.js';
-
-dotenv.config();
+import 'dotenv/config';
+import { createServer } from 'node:http';
+import expressServer from './app/index.app.js';
 
 const port = process.env.PORT || '3000';
-const app = express();
 
-await mongooseConnexion();
+const httpServer = createServer(expressServer);
 
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-
-app.use(router);
-
-app.listen(port, () => {
+httpServer.listen(port, () => {
   console.log(`Server ready: http://localhost:${port}`);
 });
