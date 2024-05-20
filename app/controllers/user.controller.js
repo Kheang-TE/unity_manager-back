@@ -81,8 +81,15 @@ export default class userController extends coreController {
     }
 
     const accessToken = Jwt.sign({ id: user.id }, process.env.JWT_SECRET);
+    res.cookie('token', accessToken, {
+      accessToken,
+      httpOnly: true, // Le cookie n'est pas accessible via JavaScript côté client
+      secure: false, // Le cookie est envoyé uniquement sur des connexions HTTPS
+      maxAge: 3600000, // Temps d'expiration du cookie en millisecondes
+      sameSite: 'strict', // Le cookie est envoyé uniquement avec des requêtes du même site
+    });
 
-    res.json({ accessToken });
+    res.json({ success: true });
   }
 
   static async getUserBoard(req, res) {
