@@ -25,9 +25,13 @@ router
    * @returns {Object} The created user.
    */
   .post(validationMiddleware(createSchema, 'body'), wrapper(userController.createUser.bind(userController)));
-router.route('/signin')
 
+router.route('/signin')
   .post(validationMiddleware(signinSchema, 'body'), wrapper(userController.signIn.bind(userController)));
+
+router.route('/board')
+  .get(wrapper(userController.getUserBoard.bind(userController)));
+
 router.route('/:id')
 
   /**
