@@ -12,7 +12,13 @@ await mongooseConnexion();
 
 const app = express();
 const httpServer = createServer(app);
-const io = new WebSocketServer(httpServer);
+const io = new WebSocketServer(httpServer, {
+  cors: {
+    origin: process.env.FRONT_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
 
 socketApp(io);
 
