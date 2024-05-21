@@ -9,17 +9,19 @@ import projectRouter from './project.router.js';
 import messageRouter from './message.router.js';
 import errorMiddleware from '../middlewares/error.middleware.js';
 import authMiddleware from '../middlewares/authentification.middleware.js';
+import socketMiddleware from '../middlewares/socket.middleware.js';
 
 // import { router as messageRouter } from "./message.router.js";
 
 const router = Router();
-router.use(authMiddleware);
+router.use('/users', userRouter);
 router.use('/lists', listRouter);
 router.use('/cards', cardRouter);
 router.use('/tags', tagRouter);
-router.use('/users', userRouter);
 router.use('/projects', projectRouter);
-router.use(messageRouter);
+router.use('/messages', messageRouter);
+router.use(authMiddleware);
+router.use(socketMiddleware);
 
 // Middleware 404 (API)
 router.use((req, res) => {
