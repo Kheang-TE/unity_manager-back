@@ -52,4 +52,6 @@ router.route('/:id')
    */
   .delete(wrapper(projectController.deleteOne.bind(projectController)));
 
+router.route('/:id/details').get(wrapper(projectController.getProjectWithDetails));
+
 export default router;
