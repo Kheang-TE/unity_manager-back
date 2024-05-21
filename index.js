@@ -1,37 +1,40 @@
-import express from 'express';
-import dotenv from 'dotenv';
+import 'dotenv/config';
 import cors from 'cors';
+import express from 'express';
 import morgan from 'morgan';
+import { createServer } from 'http';
+import { Server as WebSocketServer } from 'socket.io';
 import router from './app/routers/index.js';
 import mongooseConnexion from './app/models/mongooseClient.js';
-import { createServer } from "node:http";
-import { Server as WebsocketServer } from "socket.io";
-import socketApp from "./app/webSocket_chat/socket.app.js";
-
-dotenv.config();
-
-const port = process.env.PORT || '3000';
-const app = express();
-
-const server = createServer(app);
-
+import socketApp from './app/sockets/app.socket.js';
 
 await mongooseConnexion();
 
-app.use(express.json());
-
-app.use(express.urlencoded({ extended: true }));
-const io = new WebsocketServer(server, {
-  cors: { origin: process.env.FRONT_URL || 'http://localhost:5173',
-          credentials: true,
-          optionsSuccessStatus: 200,}
-});
+const app = express();
+const httpServer = createServer(app);
+const io = new WebSocketServer(httpServer);
 
 socketApp(io);
 
+const corsOptions = {
+  origin: process.env.FRONT_URL || 'http://localhost:5173',
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(router);
-app.use(cors());
-server.listen(port, () => {
+
+const port = process.env.PORT || 3000;
+httpServer.listen(port, () => {
   console.log(`Server ready: http://localhost:${port}`);
 });

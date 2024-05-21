@@ -18,7 +18,7 @@ router.use('/lists', listRouter);
 router.use('/cards', cardRouter);
 router.use('/tags', tagRouter);
 router.use('/projects', projectRouter);
-router.use(messageRouter);
+router.use('/messages', messageRouter);
 router.use(authMiddleware);
 
 // Middleware 404 (API)
