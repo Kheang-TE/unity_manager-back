@@ -6,7 +6,7 @@ import { createServer } from 'http';
 import { Server as WebSocketServer } from 'socket.io';
 import router from './app/routers/index.js';
 import mongooseConnexion from './app/models/mongooseClient.js';
-import socketApp from './app/sockets/socket.app.js';
+import socketApp from './app/sockets/app.socket.js';
 
 await mongooseConnexion();
 
