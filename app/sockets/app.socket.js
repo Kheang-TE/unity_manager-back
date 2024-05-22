@@ -18,10 +18,19 @@ export default (io) => {
 
     users.push(user);
 
+    socket.on('connecting', (firstname) => {
+      user.username = firstname;
+    });
+
     // L'événement pour rejoindre le projet
-    socket.on('joinProject', (projectId) => {
-      socket.join(projectId);
-      console.log(`Socket ${socket.id} joined project ${projectId}`);
+    socket.on('joinProject', (projectData) => {
+      if (user.project) {
+        console.log(`The user ${user.username} left project ${user.project.name}`);
+        socket.leave(user.project);
+      }
+      user.project = projectData;
+      socket.join(user.project);
+      console.log(`The user  ${user.username} joined project ${user.project.name}`);
     });
 
     // L'événement pour quitter le projet

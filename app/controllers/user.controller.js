@@ -90,7 +90,7 @@ export default class userController extends coreController {
       sameSite: 'strict', // Le cookie est envoyé uniquement avec des requêtes du même site
     });
 
-    res.json({ success: true });
+    res.json({ firstname: user.firstname });
   }
 
   static async getUserBoard(req, res) {
