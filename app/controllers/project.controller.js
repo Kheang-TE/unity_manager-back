@@ -86,4 +86,20 @@ export default class projectController extends coreController {
     });
     res.json(project);
   }
+
+  static async getProjectByUser(req, res) {
+    const userId = +req.user.id;
+    const project = await Project.findAll({
+      include: [{
+        model: User, // Les collaborateurs des projets
+        attributes: ['id'],
+        as: 'collaborators',
+        through: { attributes: [] },
+        where: {
+          id: userId,
+        },
+      }],
+    });
+    res.json(project);
+  }
 }

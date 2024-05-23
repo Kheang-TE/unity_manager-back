@@ -3,7 +3,7 @@ import ApiError from '../errors/api.error.js';
 
 export default (req, res, next) => {
   try {
-    const token = req.headers.authorization.split(' ')[1];
+    const { token } = req.cookies;
     if (!token) {
       throw new ApiError(401, 'Unauthorized', 'No token provided');
     }
