@@ -4,6 +4,7 @@ import express from 'express';
 import morgan from 'morgan';
 import { createServer } from 'http';
 import { Server as WebSocketServer } from 'socket.io';
+import cookieParser from 'cookie-parser';
 import router from './app/routers/index.js';
 import mongooseConnexion from './app/models/mongooseClient.js';
 import socketApp from './app/sockets/app.socket.js';
@@ -20,6 +21,7 @@ const io = new WebSocketServer(httpServer, {
   },
 });
 
+app.use(cookieParser());
 socketApp(io);
 
 const corsOptions = {
