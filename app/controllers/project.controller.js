@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import {
-  Project, User, List, Card, Tag,
+  Project, User, List, Card, Tag, Message,
 } from '../models/index.js';
 import coreController from './core.controller.js';
 
@@ -66,7 +66,7 @@ export default class projectController extends coreController {
         as: 'lists',
         include: [{
           model: Card, // Les cartes des listes
-          attributes: ['id', 'name', 'content', 'position'],
+          attributes: ['id', 'name', 'content', 'list_id', 'position'],
           as: 'cards',
           include: [{
             model: User, // L'utilisateur associé à chaque carte
@@ -84,7 +84,9 @@ export default class projectController extends coreController {
       }],
 
     });
-    res.json(project);
+    const messages = await Message.find({ project_id: id });
+    project.dataValues.messages = messages;
+    res.send(project);
   }
 
   static async getProjectByUser(req, res) {
@@ -100,6 +102,11 @@ export default class projectController extends coreController {
         },
       }],
     });
+
+    // Search for messages
+    const messages = await Message.find({ project_id: project[0].id });
+
+    project.message = messages;
     res.json(project);
   }
 }

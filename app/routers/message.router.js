@@ -5,11 +5,13 @@ import messageController from '../controllers/message.controller.js';
 import createSchema from '../schemas/message.create.schema.js';
 import updateSchema from '../schemas/message.update.schema.js';
 import validationMiddleware from '../middlewares/validation.middleware.js';
+import setUserId from '../middlewares/userIdFromTokenToBody.middleware.js';
 
 const router = Router();
 export default router;
+router.route('/projects/:id').get(controllerWrapper(messageController.getByProjectId));
 router
-  .route('/messages')
+  .route('/')
   /**
    * Retrieves all messages.
    * @route GET /messages
@@ -18,9 +20,9 @@ router
    */
   .get(controllerWrapper(messageController.getAll))
 
-  .post(validationMiddleware(createSchema, 'body'), controllerWrapper(messageController.create));
+  .post(setUserId, validationMiddleware(createSchema, 'body'), controllerWrapper(messageController.create));
 
-router.route('/messages/:id')
+router.route('/:id')
   /**
    * Retrieves a specific message by its ID.
    * @route GET /messages/{id}

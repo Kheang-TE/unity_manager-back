@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import cors from 'cors';
 import express from 'express';
-import morgan from 'morgan';
+// import morgan from 'morgan';
 import { createServer } from 'http';
 import { Server as WebSocketServer } from 'socket.io';
 import cookieParser from 'cookie-parser';
@@ -13,6 +13,7 @@ await mongooseConnexion();
 
 const app = express();
 const httpServer = createServer(app);
+
 const io = new WebSocketServer(httpServer, {
   cors: {
     origin: process.env.FRONT_URL || 'http://localhost:5173',
@@ -39,7 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cors(corsOptions));
-app.use(morgan('combined'));
+// app.use(morgan('combined'));
 app.use(router);
 
 const port = process.env.PORT || 3000;

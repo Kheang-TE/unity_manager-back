@@ -26,27 +26,15 @@ export default class coreController {
    * @return {Object} The JSON response containing all retrieved data
    */
   static async getOne(req, res) {
-    const userId = req.user.id;
     const id = +req.params.id;
     if (!Number.isInteger(id)) {
       throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
     }
 
-    const result = await this.tableName.findByPk(id, {
-      include: {
-        model: User,
-        as: 'collaborators',
-        attributes: ['id'],
-        through: { attributes: [] },
-      },
-    });
+    const result = await this.tableName.findByPk(id);
 
     if (!result) {
       throw new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`);
-    }
-
-    if (!result.collaborators.find((collaborator) => collaborator.id === userId)) {
-      throw new ApiError(403, 'Forbidden', 'You are not allowed to access this resource');
     }
     return res.json(result);
   }
