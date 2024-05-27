@@ -68,7 +68,6 @@ export default class userController extends coreController {
   }
 
   static async signIn(req, res) {
-    console.log(req.body);
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });

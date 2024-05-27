@@ -6,7 +6,7 @@
  * @return {type} undefined
  */
 const users = [];
-let messages = [];
+const messages = [];
 
 export default (io) => {
   io.on('connection', (socket) => {
@@ -16,59 +16,36 @@ export default (io) => {
       username: socket.id,
     };
 
-    users.push(user);
-
     socket.on('connecting', (firstname) => {
       user.username = firstname;
     });
 
+    users.push(user);
+
     // L'événement pour rejoindre le projet
     socket.on('joinProject', (projectData) => {
       if (user.project) {
-        console.log(`The user ${user.username} left project ${user.project.name}`);
-        socket.leave(user.project);
+        console.log(`The user ${user.username} left project ${user.project.name} id ${user.project.id}`);
+        socket.leave(user.project.id);
       }
       user.project = projectData;
-      socket.join(user.project);
+      socket.join(user.project.id);
+      io.to(user.project.id).emit('userState', user);
+      io.to(user.project.id).emit('chatState', { users, messages });
       console.log(`The user  ${user.username} joined project ${user.project.name}`);
     });
 
     // L'événement pour quitter le projet
     socket.on('leaveProject', (projectId) => {
+      io.to(user.project.id).emit('chatState', { users, messages });
       socket.leave(projectId);
       console.log(`Socket ${socket.id} left project ${projectId}`);
     });
 
     // L'événement pour envoyer un message au projet
-    socket.on('sendMessage', (message) => {
-      io.to(message.project_id).emit('receiveMessage', message);
-    });
-
-    socket.emit('userState', user);
-    io.emit('chatState', { users, messages });
-
-    socket.on('send', async (message) => {
-      if (message === 'loaded') {
-        const response = 'Server is loaded';
-        const serverMessage = {
-          user: {
-            username: user.username,
-            server: true,
-          },
-          message: response,
-        };
-        messages.push(serverMessage);
-        io.emit('message', serverMessage);
-      } else {
-        const userMessage = { user, message };
-        messages.push(userMessage);
-        io.emit('message', userMessage);
-      }
-    });
-
-    socket.on('clearMessages', () => {
-      messages = [];
-      io.emit('chatState', { users, messages });
+    socket.on('sendMessage', () => {
+      io.to(user.project.id).emit('chatState', { users, messages });
+      io.to(user.project.id).emit('receiveMessage');
     });
 
     socket.on('disconnect', () => {
@@ -78,8 +55,6 @@ export default (io) => {
       if (userIndex !== -1) {
         users.splice(userIndex, 1);
       }
-
-      io.emit('chatState', { users, messages });
     });
   });
 };

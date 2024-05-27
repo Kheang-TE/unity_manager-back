@@ -13,7 +13,7 @@ List.hasMany(Card, {
     name: 'list_id',
     allowNull: false,
   },
-  onDelete: 'CASCADE',
+  onDelete: 'CASCADE', // When I delete a list, I want to delete its cards
 });
 Card.belongsTo(List, {
   as: 'list', // When I request a card, I want to get its list

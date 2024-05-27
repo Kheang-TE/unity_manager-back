@@ -40,7 +40,7 @@ CREATE TABLE "card" (
     "name" TEXT NOT NULL,
     "content" TEXT NOT NULL,
     "position" FLOAT NOT NULL,
-    "list_id" INT NOT NULL REFERENCES "list" ("id"),
+    "list_id" INT NOT NULL REFERENCES "list" ("id")  ON DELETE CASCADE ,
     "created_at" TIMESTAMPTZ NOT NULL,
     "updated_at" TIMESTAMPTZ
 );

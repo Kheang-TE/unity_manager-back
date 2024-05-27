@@ -38,8 +38,9 @@ const messageController = {
     res.send(newMessage);
   },
   async getByProjectId(req, res) {
-    const id = +req.params.id;
-    const messages = await Message.findAll({ where: { project_id: id } });
+    const { id } = req.params;
+    console.log('id de la requête get by project id :', req.params.id);
+    const messages = await Message.find({ project_id: id });
     res.send(messages);
   },
   async getByUserId(req, res) {
