@@ -35,12 +35,14 @@ Card.belongsToMany(Tag, {
   as: 'tags',
   through: 'card_has_tag',
   foreignKey: 'card_id',
+  onDelete: 'CASCADE',
 });
 
 Tag.belongsToMany(Card, {
   as: 'cards',
   through: 'card_has_tag',
   foreignKey: 'tag_id',
+  onDelete: 'CASCADE',
 });
 
 // Card <--> User (Many-to-Many)

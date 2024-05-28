@@ -90,7 +90,7 @@ export default class projectController extends coreController {
   }
 
   static async getProjectByUser(req, res) {
-    const userId = +req.user.id;
+    const userId = req.user.id;
     const project = await Project.findAll({
       include: [{
         model: User, // Les collaborateurs des projets
@@ -102,6 +102,12 @@ export default class projectController extends coreController {
         },
       }],
     });
+
+    if (project.length === 0) {
+      return res.status(404).json({
+        error: 'The requested resource could not be found on the server.',
+      });
+    }
 
     // Search for messages
     const messages = await Message.find({ project_id: project[0].id });

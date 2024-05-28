@@ -8,8 +8,9 @@ import ApiError from '../errors/api.error.js';
 const messageController = {
 
   async create(req, res) {
+    const { id } = req.user;
     const input = req.body;
-    const newMessage = new Message({ ...input });
+    const newMessage = new Message({ ...input, user_id: id });
     await newMessage.save();
     res.send(newMessage);
   },
