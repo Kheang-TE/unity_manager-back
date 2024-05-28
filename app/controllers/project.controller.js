@@ -9,6 +9,21 @@ export default class projectController extends coreController {
 
   static stringTableName = 'Project';
 
+  static async create(req, res) {
+    const input = req.body;
+
+    const project = await this.tableName.create({ name: input.name, owner_id: input.owner_id });
+    // find the owner
+    const owner = await User.findByPk(input.owner_id);
+    if (!owner) {
+      throw new ApiError(404, 'Owner not found', 'Owner not found');
+    }
+    // add the owner to the project
+    await project.addCollaborator(owner);
+
+    return res.status(201).json(project);
+  }
+
   static async getUserDetails(req, res) {
     const { id } = req.params;
     const project = await User.findByPk(id, {
@@ -117,6 +132,6 @@ export default class projectController extends coreController {
     const messages = await Message.find({ project_id: project[0].id });
 
     project.message = messages;
-    res.json(project);
+    return res.json(project);
   }
 }
