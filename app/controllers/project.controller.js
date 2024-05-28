@@ -27,10 +27,12 @@ export default class projectController extends coreController {
             model: List, // Les listes du projet
             attributes: ['id', 'name', 'position', 'code_color'],
             as: 'lists',
+            order: [['position', 'ASC']],
             include: [{
               model: Card, // Les cartes des listes
               attributes: ['id', 'name', 'content', 'position'],
               as: 'cards',
+              order: [['position', 'ASC']],
               include: [{
                 model: User, // L'utilisateur associé à chaque carte
                 attributes: ['firstname', 'lastname'],
@@ -64,6 +66,7 @@ export default class projectController extends coreController {
         model: List, // Les listes du projet
         attributes: ['id', 'name', 'position', 'code_color'],
         as: 'lists',
+        order: [['position', 'ASC']],
         include: [{
           model: Card, // Les cartes des listes
           attributes: ['id', 'name', 'content', 'list_id', 'position'],
@@ -72,6 +75,7 @@ export default class projectController extends coreController {
             model: User, // L'utilisateur associé à chaque carte
             attributes: ['firstname', 'lastname'],
             through: { attributes: [] },
+            order: [['position', 'ASC']],
             as: 'users',
           },
           {

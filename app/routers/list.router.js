@@ -54,4 +54,5 @@ router.route('/:id')
    */
   .delete(wrapper(listController.deleteOne.bind(listController)));
 
+router.route('/projects/:id').get(wrapper(listController.getByProjectId.bind(listController)));
 export default router;
