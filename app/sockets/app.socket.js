@@ -42,9 +42,12 @@ export default (io) => {
       console.log(`Socket ${socket.id} left project ${projectId}`);
     });
 
+    socket.on('boardEvent', () => {
+      io.to(user.project.id).emit('refreshBoard');
+    });
+
     // L'événement pour envoyer un message au projet
-    socket.on('sendMessage', () => {
-      io.to(user.project.id).emit('chatState', { users, messages });
+    socket.on('messageCreation', () => {
       io.to(user.project.id).emit('receiveMessage');
     });
 
@@ -55,6 +58,7 @@ export default (io) => {
       if (userIndex !== -1) {
         users.splice(userIndex, 1);
       }
+      // io.to(user.project.id).emit('chatState', { users, messages });
     });
   });
 };
