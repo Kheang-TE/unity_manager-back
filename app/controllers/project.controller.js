@@ -81,7 +81,7 @@ export default class projectController extends coreController {
         model: List, // Les listes du projet
         attributes: ['id', 'name', 'position', 'code_color'],
         as: 'lists',
-        order: [['position', 'ASC']],
+        // orderby: [['position', 'ASC']],
         include: [{
           model: Card, // Les cartes des listes
           attributes: ['id', 'name', 'content', 'list_id', 'position'],
@@ -101,6 +101,7 @@ export default class projectController extends coreController {
           }],
         }],
       }],
+      order: [['lists', 'position', 'ASC']],
 
     });
     const messages = await Message.find({ project_id: id });
