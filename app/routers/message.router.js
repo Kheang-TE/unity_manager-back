@@ -1,11 +1,10 @@
 import { Router } from 'express';
-// import * as messageController from '../controllers/message.controller.js';
+
 import controllerWrapper from '../middlewares/controller.wrapper.js';
 import messageController from '../controllers/message.controller.js';
 import createSchema from '../schemas/message.create.schema.js';
 import updateSchema from '../schemas/message.update.schema.js';
 import validationMiddleware from '../middlewares/validation.middleware.js';
-import setUserId from '../middlewares/userIdFromTokenToBody.middleware.js';
 
 const router = Router();
 export default router;
@@ -20,7 +19,7 @@ router
    */
   .get(controllerWrapper(messageController.getAll))
 
-  .post(setUserId, validationMiddleware(createSchema, 'body'), controllerWrapper(messageController.create));
+  .post(validationMiddleware(createSchema, 'body'), controllerWrapper(messageController.create));
 
 router.route('/:id')
   /**

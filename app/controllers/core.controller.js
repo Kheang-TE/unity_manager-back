@@ -1,5 +1,4 @@
 import ApiError from '../errors/api.error.js';
-import User from '../models/User.js';
 
 export default class coreController {
   static tableName = null;
