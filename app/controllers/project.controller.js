@@ -81,7 +81,6 @@ export default class projectController extends coreController {
         model: List, // Les listes du projet
         attributes: ['id', 'name', 'position', 'code_color'],
         as: 'lists',
-        // orderby: [['position', 'ASC']],
         include: [{
           model: Card, // Les cartes des listes
           attributes: ['id', 'name', 'content', 'list_id', 'position'],

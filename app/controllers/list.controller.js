@@ -21,9 +21,9 @@ export default class listController extends coreController {
           attributes: ['firstname', 'lastname'],
           through: { attributes: [] },
           as: 'users',
-          order: [['position', 'ASC']],
         }],
       }],
+      order: [['position', 'ASC']],
     });
     return res.json(result);
   }
