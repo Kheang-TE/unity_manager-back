@@ -13,7 +13,7 @@ import ApiError from '../errors/api.error.js';
 export default class userController extends coreController {
   static tableName = User;
 
-  static stringTableName = 'User';
+  static stringTableName = "User";
 
   /**
    * Creates a new user in the system if all input parameters are valid.
@@ -24,12 +24,12 @@ export default class userController extends coreController {
    * @throws {ApiError} If a user with the same email already exists.
    */
   static async createUser(req, res, next) {
-    const {
-      firstname, lastname, email, password, code_color,
-    } = req.body;
+    const { firstname, lastname, email, password, code_color } = req.body;
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      next(new ApiError(409, 'Conflict', 'User with that email already exists.'));
+      next(
+        new ApiError(409, "Conflict", "User with that email already exists.")
+      );
     }
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
     const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
@@ -55,28 +55,34 @@ export default class userController extends coreController {
    */
   static async updateUser(req, res, next) {
     const userId = +req.user.id;
-    const {
-      firstname, lastname, email, new_password, password, code_color,
-    } = req.body;
+    const { firstname, lastname, email, new_password, password, code_color } =
+      req.body;
     if (!Number.isInteger(userId)) {
-      return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
+      return next(
+        new ApiError(400, "Bad Request", "The provided ID is not a number")
+      );
     }
     const user = await User.findByPk(userId);
     if (!user) {
-      return next(new ApiError(404, 'Not Found', 'User not found'));
+      return next(new ApiError(404, "Not Found", "User not found"));
     }
-    const numberOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
+    const numberOfSaltRounds =
+      parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) {
-      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
+      return next(
+        new ApiError(401, "Unauthorized", "Email or password is incorrect")
+      );
     }
 
     const updatedUser = await user.update({
       firstname,
       lastname,
       email,
-      password: new_password ? await bcrypt.hash(new_password, numberOfSaltRounds) : user.password,
+      password: new_password
+        ? await bcrypt.hash(new_password, numberOfSaltRounds)
+        : user.password,
       code_color,
     });
 
@@ -97,23 +103,37 @@ export default class userController extends coreController {
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
+      return next(
+        new ApiError(401, "Unauthorized", "Email or password is incorrect")
+      );
     }
 
     const isMatching = await bcrypt.compare(password, user.password);
     if (!isMatching) {
-      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
+      return next(
+        new ApiError(401, "Unauthorized", "Email or password is incorrect")
+      );
     }
 
     const accessToken = Jwt.sign({ id: user.id }, process.env.JWT_SECRET);
-    res.cookie('token', accessToken, {
+    res.cookie("token", accessToken, {
       httpOnly: true, // Le cookie n'est pas accessible via JavaScript côté client
       secure: false, // Le cookie est envoyé uniquement sur des connexions HTTPS
       maxAge: 24 * 60 * 60 * 1000, // Temps d'expiration du cookie en millisecondes
-      sameSite: 'strict', // Le cookie est envoyé uniquement avec des requêtes du même site
+      sameSite: "strict", // Le cookie est envoyé uniquement avec des requêtes du même site
     });
 
-    res.json({ firstname: user.firstname, lastname: user.lastname, id: user.id });
+    res.json({
+      firstname: user.firstname,
+      lastname: user.lastname,
+      code_color: user.code_color,
+      email: user.email,
+      id: user.id,
+    });
+  }
+
+  static async signOut(req, res) {
+      res.clearCookie("token");
   }
 
   /**
@@ -128,44 +148,52 @@ export default class userController extends coreController {
   static async getUserBoard(req, res, next) {
     const id = +req.user.id;
     if (!Number.isInteger(id)) {
-      return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
+      return next(
+        new ApiError(400, "Bad Request", "The provided ID is not a number")
+      );
     }
     const result = await User.findByPk(id, {
-      include: [{
-        model: Project,
-        as: 'projects',
-        through: { attributes: [] },
-        include: [
-          {
-            model: User, // Les collaborateurs des projets
-            attributes: ['id', 'firstname', 'lastname'],
-            as: 'collaborators',
-            through: { attributes: [] },
-          },
-          {
-            model: List, // Les listes du projet
-            attributes: ['id', 'name', 'position', 'code_color'],
-            as: 'lists',
-            include: [{
-              model: Card, // Les cartes des listes
-              attributes: ['id', 'name', 'content', 'position'],
-              as: 'cards',
-              include: [{
-                model: User, // L'utilisateur associé à chaque carte
-                attributes: ['firstname', 'lastname'],
-                through: { attributes: [] },
-                as: 'users',
-              },
-              {
-                model: Tag, // Les tags des cartes
-                attributes: ['id', 'name', 'code_color'],
-                through: { attributes: [] },
-                as: 'tags',
-              }],
-            }],
-          },
-        ],
-      }],
+      include: [
+        {
+          model: Project,
+          as: "projects",
+          through: { attributes: [] },
+          include: [
+            {
+              model: User, // Les collaborateurs des projets
+              attributes: ["id", "firstname", "lastname"],
+              as: "collaborators",
+              through: { attributes: [] },
+            },
+            {
+              model: List, // Les listes du projet
+              attributes: ["id", "name", "position", "code_color"],
+              as: "lists",
+              include: [
+                {
+                  model: Card, // Les cartes des listes
+                  attributes: ["id", "name", "content", "position"],
+                  as: "cards",
+                  include: [
+                    {
+                      model: User, // L'utilisateur associé à chaque carte
+                      attributes: ["firstname", "lastname"],
+                      through: { attributes: [] },
+                      as: "users",
+                    },
+                    {
+                      model: Tag, // Les tags des cartes
+                      attributes: ["id", "name", "code_color"],
+                      through: { attributes: [] },
+                      as: "tags",
+                    },
+                  ],
+                },
+              ],
+            },
+          ],
+        },
+      ],
     });
     res.json(result);
   }
