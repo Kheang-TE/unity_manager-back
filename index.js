@@ -8,6 +8,8 @@ import cookieParser from 'cookie-parser';
 import router from './app/routers/index.js';
 import mongooseConnexion from './app/models/mongooseClient.js';
 import socketApp from './app/sockets/app.socket.js';
+import rateLimiter from './app/middlewares/rateLimiter.middleware.js';
+import bodySanitizer from './app/middlewares/bodySanitizer.middleware.js';
 
 await mongooseConnexion();
 
@@ -21,7 +23,7 @@ const io = new WebSocketServer(httpServer, {
     credentials: true,
   },
 });
-
+app.use(rateLimiter);
 app.use(cookieParser());
 socketApp(io);
 
@@ -39,6 +41,7 @@ app.use((req, res, next) => {
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(bodySanitizer);
 app.use(cors(corsOptions));
 app.use(morgan('combined'));
 app.use(router);
