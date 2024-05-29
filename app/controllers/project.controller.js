@@ -1,4 +1,5 @@
 /* eslint-disable max-len */
+import ApiError from '../errors/api.error.js';
 import {
   Project, User, List, Card, Tag, Message,
 } from '../models/index.js';
@@ -9,14 +10,22 @@ export default class projectController extends coreController {
 
   static stringTableName = 'Project';
 
-  static async create(req, res) {
+  /**
+   * Creates a new project with the given input data and adds the owner to the project.
+   *
+   * @param {Object} req - The request object containing the project data.
+   * @param {Object} res - The response object to send the result.
+   * @returns {Promise<Object>} The created project as a JSON response with status code 201.
+   * @throws {ApiError} If the owner is not found.
+   */
+  static async create(req, res, next) {
     const input = req.body;
 
     const project = await this.tableName.create({ name: input.name, owner_id: input.owner_id });
     // find the owner
     const owner = await User.findByPk(input.owner_id);
     if (!owner) {
-      throw new ApiError(404, 'Owner not found', 'Owner not found');
+      next(new ApiError(404, 'Owner not found', 'Owner not found'));
     }
     // add the owner to the project
     await project.addCollaborator(owner);
@@ -24,6 +33,13 @@ export default class projectController extends coreController {
     return res.status(201).json(project);
   }
 
+  /**
+ * Retrieves the details of a user, including their projects, collaborators, lists, cards, users, and tags.
+ *
+ * @param {Object} req - The request object containing the user ID in the params.
+ * @param {Object} res - The response object to send the user details.
+ * @return {Promise<Object>} The user details as a JSON response.
+ */
   static async getUserDetails(req, res) {
     const { id } = req.params;
     const project = await User.findByPk(id, {
@@ -68,36 +84,43 @@ export default class projectController extends coreController {
     res.send(project);
   }
 
+  /**
+   * Retrieves a project with its details, including collaborators, lists, cards, users, and tags.
+   *
+   * @param {Object} req - The request object containing the project ID in the params.
+   * @param {Object} res - The response object to send the project details.
+   * @return {Promise<Object>} The project details as a JSON response.
+   */
   static async getProjectWithDetails(req, res) {
     const { id } = req.params;
     const project = await Project.findByPk(id, {
       include: [{
-        model: User, // Les collaborateurs des projets
+        model: User, // The collaborators of the project
         attributes: ['id', 'firstname', 'lastname'],
         as: 'collaborators',
         through: { attributes: [] },
       },
       {
-        model: List, // Les listes du projet
+        model: List, // The lists of the project
         attributes: ['id', 'name', 'position', 'code_color'],
         as: 'lists',
         separate: true,
         order: [['position', 'ASC']],
         include: [{
-          model: Card, // Les cartes des listes
+          model: Card, // The cards of the list
           attributes: ['id', 'name', 'content', 'list_id', 'position'],
           as: 'cards',
           separate: true,
           order: [['position', 'ASC']],
           include: [{
-            model: User, // L'utilisateur associé à chaque carte
+            model: User, // The users of the card
             attributes: ['firstname', 'lastname'],
             through: { attributes: [] },
             order: [['position', 'ASC']],
             as: 'users',
           },
           {
-            model: Tag, // Les tags des cartes
+            model: Tag, // The tags of the card
             attributes: ['id', 'name', 'code_color'],
             through: { attributes: [] },
             as: 'tags',
@@ -110,11 +133,20 @@ export default class projectController extends coreController {
     res.json(project);
   }
 
-  static async getProjectByUser(req, res) {
+  /**
+   * Retrieves all projects associated with the given user ID.
+   *
+   * @param {Object} req - The request object containing the user ID.
+   * @param {Object} res - The response object to send the result.
+   * @param {Function} next - The next middleware function.
+   * @return {Promise<Object>} The project data as a JSON response.
+   * @throws {ApiError} If no project is found for the user ID.
+   */
+  static async getProjectByUser(req, res, next) {
     const userId = req.user.id;
     const project = await Project.findAll({
       include: [{
-        model: User, // Les collaborateurs des projets
+        model: User, // The collaborators of the project
         attributes: ['id'],
         as: 'collaborators',
         through: { attributes: [] },
@@ -125,15 +157,14 @@ export default class projectController extends coreController {
     });
 
     if (project.length === 0) {
-      return res.status(404).json({
-        error: 'The requested resource could not be found on the server.',
-      });
+      return next(new ApiError(404, 'No project found', 'No project found'));
     }
 
     // Search for messages
     const messages = await Message.find({ project_id: project[0].id });
-
+    // Add the messages to the project object
     project.message = messages;
+
     return res.json(project);
   }
 }
