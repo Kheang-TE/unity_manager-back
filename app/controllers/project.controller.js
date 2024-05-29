@@ -25,7 +25,7 @@ export default class projectController extends coreController {
     // find the owner
     const owner = await User.findByPk(input.owner_id);
     if (!owner) {
-      throw new ApiError(404, 'Owner not found', 'Owner not found');
+      next(new ApiError(404, 'Owner not found', 'Owner not found'));
     }
     // add the owner to the project
     await project.addCollaborator(owner);
@@ -131,7 +131,16 @@ export default class projectController extends coreController {
     res.send(project);
   }
 
-  static async getProjectByUser(req, res) {
+  /**
+   * Retrieves all projects associated with the given user ID.
+   *
+   * @param {Object} req - The request object containing the user ID.
+   * @param {Object} res - The response object to send the result.
+   * @param {Function} next - The next middleware function.
+   * @return {Promise<Object>} The project data as a JSON response.
+   * @throws {ApiError} If no project is found for the user ID.
+   */
+  static async getProjectByUser(req, res, next) {
     const userId = req.user.id;
     const project = await Project.findAll({
       include: [{
@@ -146,9 +155,7 @@ export default class projectController extends coreController {
     });
 
     if (project.length === 0) {
-      return res.status(404).json({
-        error: 'The requested resource could not be found on the server.',
-      });
+      next(new ApiError(404, 'No project found', 'No project found'));
     }
 
     // Search for messages
