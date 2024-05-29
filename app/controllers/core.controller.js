@@ -24,10 +24,10 @@ export default class coreController {
    * @param {Object} res - The response object
    * @return {Object} The JSON response containing all retrieved data
    */
-  static async getOne(req, res) {
+  static async getOne(req, res, next) {
     const id = +req.params.id;
     if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+      next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
 
     const result = await this.tableName.findByPk(id);

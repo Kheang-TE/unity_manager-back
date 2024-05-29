@@ -1,12 +1,6 @@
 /**
- * @typedef {object} ApiJsonError - Error response
- * @property {string} error.required - Error message
- * @example
- * {
- *  "error": "Bad request"
- * }
- */
-
+* Middleware to handle errors and return the appropriate status code and message.
+*/
 export default (err, req, res, next) => {
   let {
     status, message, details,

@@ -1,3 +1,11 @@
+/**
+ * Check if the user has access to the resource
+ * @param {Object} req - Express request object
+ * @param {Object} res - Express response object
+ * @param {Function} next - Express next middleware
+ * @returns {void}
+ */
+
 export default async (req, res, next) => {
   const userId = req.user.id;
   const resourceId = req.params.id;
