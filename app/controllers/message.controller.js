@@ -22,11 +22,15 @@ const messageController = {
  *
  * @param {Object} req - The request object containing the message ID.
  * @param {Object} res - The response object to send the message.
+ * @param {Function} next - The next middleware function.
  * @return {Promise<void>} - A promise that resolves when the message is retrieved and sent as a response.
  */
-  async getOne(req, res) {
+  async getOne(req, res, next) {
     const { id } = req.params;
-    const message = await Message.findById({ _id: id });
+    const message = await Message.findById({ _id: +id });
+    if (!message) {
+      return next(new ApiError(404, 'Data not found', `Message not found with the provided the ID: ${+id}`));
+    }
     res.send(message);
   },
   /**
@@ -40,19 +44,21 @@ const messageController = {
     const messages = await Message.find();
     res.send(messages);
   },
+
   /**
-   * Deletes a specific record from the database based on the provided ID.
-   *
-   * @param {Object} req - The request object containing the ID of the message to delete.
-   * @param {Object} res - The response object to send the result of the deletion.
-   * @return {Promise<void>} A promise that resolves when the deletion is complete.
-   * @throws {ApiError} If the message with the provided ID is not found.
-   */
-  async deleteOne(req, res) {
+ * Deletes a specific record from the database based on the provided ID.
+ *
+ * @param {Object} req - The request object containing the ID of the message to delete.
+ * @param {Object} res - The response object to send the result of the deletion.
+ * @param {Function} next - The next middleware function.
+ * @return {Promise<void>} A promise that resolves when the deletion is complete.
+ * @throws {ApiError} If the message with the provided ID is not found.
+ */
+  async deleteOne(req, res, next) {
     const { id } = req.params;
     const message = await Message.findById({ _id: id });
     if (!message) {
-      throw new ApiError(404, 'Data not found', `${Message.name} not found with the provided the ID: ${id}`);
+      return next(new ApiError(404, 'Data not found', `${Message.name} not found with the provided the ID: ${id}`));
     }
     await message.deleteOne();
     res.send({ message: `${Message.name} deleted successfully!` });

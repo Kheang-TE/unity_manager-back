@@ -13,6 +13,8 @@ import ApiError from '../errors/api.error.js';
 export default class userController extends coreController {
   static tableName = User;
 
+  static stringTableName = 'User';
+
   /**
    * Creates a new user in the system if all input parameters are valid.
    *
@@ -51,30 +53,34 @@ export default class userController extends coreController {
    * @throws {ApiError} If the provided password is incorrect.
    * @return {Promise<void>} The updated user as a JSON response.
    */
-  static async updateUser(req, res) {
-    const { id } = req.params;
+  static async updateUser(req, res, next) {
+    const userId = +req.user.id;
     const {
-      firstname, lastname, email, password, code_color,
+      firstname, lastname, email, new_password, password, code_color,
     } = req.body;
-    if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+    if (!Number.isInteger(userId)) {
+      return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
-    const user = await User.findByPk(id);
+    const user = await User.findByPk(userId);
     if (!user) {
-      throw new ApiError(404, 'Not Found', 'User not found');
+      return next(new ApiError(404, 'Not Found', 'User not found'));
     }
-    const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
-    const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
+    const numberOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
 
-    const isMatching = await bcrypt.compare(password, user.password);
-    if (!isMatching) {
-      throw new ApiError(401, 'Unauthorized', 'Email or password is incorrect');
+    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    if (!isPasswordMatch) {
+      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
     }
 
-    await user.update({
-      firstname, lastname, email, password: hashedPassword, code_color,
+    const updatedUser = await user.update({
+      firstname,
+      lastname,
+      email,
+      password: new_password ? await bcrypt.hash(new_password, numberOfSaltRounds) : user.password,
+      code_color,
     });
-    res.json(user);
+
+    return res.json(updatedUser);
   }
 
   /**
@@ -82,20 +88,21 @@ export default class userController extends coreController {
    *
    * @param {Object} req - The request object containing the email and password.
    * @param {Object} res - The response object for sending the result.
+   * @param {Function} next - The next middleware function.
    * @returns {Promise<void>} A promise resolved once the user is signed in and a response is sent back.
    * @throws {ApiError} If the email or password is incorrect.
    */
-  static async signIn(req, res) {
+  static async signIn(req, res, next) {
     const { email, password } = req.body;
 
     const user = await User.findOne({ where: { email } });
     if (!user) {
-      throw new ApiError(401, 'Unauthorized', 'Email or password is incorrect');
+      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
     }
 
     const isMatching = await bcrypt.compare(password, user.password);
     if (!isMatching) {
-      throw new ApiError(401, 'Unauthorized', 'Email or password is incorrect');
+      return next(new ApiError(401, 'Unauthorized', 'Email or password is incorrect'));
     }
 
     const accessToken = Jwt.sign({ id: user.id }, process.env.JWT_SECRET);
@@ -114,13 +121,14 @@ export default class userController extends coreController {
    *
    * @param {Object} req - The request object.
    * @param {Object} res - The response object.
+   * @param {Function} next - The next middleware function.
    * @return {Promise<Object>} The user board data.
    * @throws {ApiError} If the provided ID is not a number.
    */
-  static async getUserBoard(req, res) {
+  static async getUserBoard(req, res, next) {
     const id = +req.user.id;
     if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+      return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
     const result = await User.findByPk(id, {
       include: [{
