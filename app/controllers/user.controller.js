@@ -85,7 +85,7 @@ export default class userController extends coreController {
       accessToken,
       httpOnly: true, // Le cookie n'est pas accessible via JavaScript côté client
       secure: false, // Le cookie est envoyé uniquement sur des connexions HTTPS
-      maxAge: 3600000, // Temps d'expiration du cookie en millisecondes
+      maxAge: 24 * 60 * 60 * 1000, // Temps d'expiration du cookie en millisecondes
       sameSite: 'strict', // Le cookie est envoyé uniquement avec des requêtes du même site
     });
 
