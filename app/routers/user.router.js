@@ -17,7 +17,7 @@ router
    */
   .get(wrapper(userController.getAll.bind(userController)))
 
-  /**
+/**
    * Create a new user.
    * @route POST /users
    * @group Users - Operations on users
@@ -27,9 +27,22 @@ router
   .post(validationMiddleware(createSchema, 'body'), wrapper(userController.createUser.bind(userController)));
 
 router.route('/signin')
+/**
+ * Sign in a user.
+ * @route POST /users/signin
+ * @group Users - Operations on users
+ * @param {Object} req.body - User data to create.
+ * @returns {Object} The created user.
+ */
   .post(validationMiddleware(signinSchema, 'body'), wrapper(userController.signIn.bind(userController)));
 
 router.route('/board')
+  /**
+   * Retrieve the user board.
+   * @route GET /users/board
+   * @group Users - Operations on users
+   * @returns {Array<Object>} The user board.
+   */
   .get(wrapper(userController.getUserBoard.bind(userController)));
 
 router.route('/:id')

@@ -54,5 +54,13 @@ router.route('/:id')
    */
   .delete(wrapper(listController.deleteOne.bind(listController)));
 
-router.route('/projects/:id').get(wrapper(listController.getByProjectId.bind(listController)));
+router.route('/projects/:id')
+  /**
+   * Retrieves all lists by project ID.
+   * @route GET /lists/projects/{id}
+   * @group Lists - Operations on lists
+   * @param {string} req.params.id - The unique identifier of the project to retrieve lists from.
+   * @returns {Array<Object>} List of lists.
+   */
+  .get(wrapper(listController.getByProjectId.bind(listController)));
 export default router;

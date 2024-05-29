@@ -14,19 +14,20 @@ export default class userController extends coreController {
   static tableName = User;
 
   /**
-  * Creates a new user in the system if all input parameters are valid.
-  *
-  * @param {Object} req - The request object containing user details.
-  * @param {Object} res - The response object for sending the result.
-  * @returns {Promise<void>} A promise resolved once the user is created and a response is sent back.
-  */
-  static async createUser(req, res) {
+   * Creates a new user in the system if all input parameters are valid.
+   *
+   * @param {Object} req - The request object containing user details.
+   * @param {Object} res - The response object for sending the result.
+   * @returns {Promise<void>} A promise resolved once the user is created and a response is sent back.
+   * @throws {ApiError} If a user with the same email already exists.
+   */
+  static async createUser(req, res, next) {
     const {
       firstname, lastname, email, password, code_color,
     } = req.body;
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
-      throw new ApiError(409, 'Conflict', 'User with that email already exists.');
+      next(new ApiError(409, 'Conflict', 'User with that email already exists.'));
     }
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
     const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
@@ -41,6 +42,15 @@ export default class userController extends coreController {
     res.status(201).json(user);
   }
 
+  /**
+   * Updates a user's information in the database.
+   *
+   * @param {Object} req - The request object containing the user's ID and updated information.
+   * @param {Object} res - The response object to send the updated user.
+   * @throws {ApiError} If the provided ID is not a number or if the user is not found.
+   * @throws {ApiError} If the provided password is incorrect.
+   * @return {Promise<void>} The updated user as a JSON response.
+   */
   static async updateUser(req, res) {
     const { id } = req.params;
     const {
@@ -67,6 +77,14 @@ export default class userController extends coreController {
     res.json(user);
   }
 
+  /**
+   * Sign in a user with the provided email and password.
+   *
+   * @param {Object} req - The request object containing the email and password.
+   * @param {Object} res - The response object for sending the result.
+   * @returns {Promise<void>} A promise resolved once the user is signed in and a response is sent back.
+   * @throws {ApiError} If the email or password is incorrect.
+   */
   static async signIn(req, res) {
     const { email, password } = req.body;
 
@@ -92,6 +110,14 @@ export default class userController extends coreController {
     res.json({ firstname: user.firstname, lastname: user.lastname, id: user.id });
   }
 
+  /**
+   * Retrieves the user board for the authenticated user.
+   *
+   * @param {Object} req - The request object.
+   * @param {Object} res - The response object.
+   * @return {Promise<Object>} The user board data.
+   * @throws {ApiError} If the provided ID is not a number.
+   */
   static async getUserBoard(req, res) {
     const id = +req.user.id;
     if (!Number.isInteger(id)) {
