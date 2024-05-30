@@ -56,5 +56,8 @@ router.route('/:id')
   .delete(wrapper(projectController.deleteOne.bind(projectController)));
 
 router.route('/:id/details').get(wrapper(projectController.getProjectWithDetails));
+router.route('/:id/collaborators')
+  .get(wrapper(projectController.getLastCollaborator.bind(projectController)))
+  .post(wrapper(projectController.createCollaborators.bind(projectController)));
 
 export default router;

@@ -66,6 +66,7 @@ export default class userController extends coreController {
       );
     }
     const user = await User.findByPk(userId);
+    console.log(user);
     if (!user) {
       return next(new ApiError(404, 'Not Found', 'User not found'));
     }
@@ -126,7 +127,7 @@ export default class userController extends coreController {
     });
 
     return res.json({
-      id: user.id, firstname: user.firstname, lastname: user.lastname, id: user.id, email: user.email, code_color: user.code_color,
+      id: user.id, firstname: user.firstname, lastname: user.lastname, email: user.email, code_color: user.code_color,
     });
   }
 
