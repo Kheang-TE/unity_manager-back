@@ -66,7 +66,7 @@ export default class userController extends coreController {
       lastname,
       email,
       new_password,
-      password,
+      actual_password,
       code_color,
     } = req.body;
     if (!Number.isInteger(userId)) {
@@ -80,7 +80,7 @@ export default class userController extends coreController {
     }
     const numberOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
 
-    const isPasswordMatch = await bcrypt.compare(password, user.password);
+    const isPasswordMatch = await bcrypt.compare(actual_password, user.password);
     if (!isPasswordMatch) {
       return next(
         new ApiError(401, 'Unauthorized', 'Email or password is incorrect'),
@@ -135,16 +135,17 @@ export default class userController extends coreController {
     });
 
     return res.json({
-      firstname: user.firstname,
-      lastname: user.lastname,
-      code_color: user.code_color,
-      email: user.email,
-      id: user.id,
+      id: user.id, firstname: user.firstname, lastname: user.lastname, id: user.id, email: user.email, code_color: user.code_color,
     });
   }
 
   static async signOut(req, res) {
-    res.clearCookie('token');
+    res.clearCookie('token', {
+      httpOnly: true,
+      secure: false,
+      sameSite: 'strict',
+    });
+    res.status(200).json({ message: 'Sign out successful' });
   }
 
   /**

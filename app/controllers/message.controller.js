@@ -1,4 +1,4 @@
-import { Message } from '../models/index.js';
+import { Message, User } from '../models/index.js';
 import ApiError from '../errors/api.error.js';
 
 const messageController = {
@@ -83,10 +83,33 @@ const messageController = {
  * @param {Object} res - The response object.
  * @return {Promise<void>} A promise that resolves when the messages are retrieved and sent as a response.
  */
-  async getByProjectId(req, res) {
-    const { id } = req.params;+++
-    const messages = await Message.find({ project_id: id });
-    res.send(messages);
+  async getByProjectId(req, res, next) {
+    const { id } = req.params;
+    if (!id || typeof id !== 'string') {
+      next(new ApiError(400, 'Bad Request', 'Invalid project ID'));
+    }
+
+    try {
+      const messages = await Message.find({ project_id: id });
+      if (!messages.length) {
+        next(new ApiError(404, 'Data not found', 'No messages found for the provided project ID'));
+      }
+
+      const messagesWithUser = await Promise.all(messages.map(async (message) => {
+        try {
+          const user = await User.findByPk(message.user_id);
+          return { ...message.toJSON(), user: user ? { firstname: user.firstname, lastname: user.lastname, color: user.code_color } : null };
+        } catch (error) {
+          console.error('Error while getting user:', error);
+          return { ...message.toJSON(), user: null };
+        }
+      }));
+
+      res.send(messagesWithUser);
+    } catch (error) {
+      console.error('Error while getting messages:', error);
+      res.status(500).json({ message: 'Internal Server Error', error: 'An unexpected error occurred' });
+    }
   },
   /**
  * Retrieves all messages associated with a user based on the provided user ID.

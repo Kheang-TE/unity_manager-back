@@ -129,8 +129,17 @@ export default class projectController extends coreController {
       }],
     });
     const messages = await Message.find({ project_id: id });
-    project.dataValues.messages = messages;
-    res.json(project);
+    const messagesWithUser = await Promise.all(messages.map(async (message) => {
+      try {
+        const user = await User.findByPk(message.user_id);
+        return { ...message.toJSON(), user: user ? { firstname: user.firstname, lastname: user.lastname, color: user.code_color } : null };
+      } catch (error) {
+        console.error('Error while getting user:', error);
+        return { ...message.toJSON(), user: null };
+      }
+    }));
+    project.dataValues.messages = messagesWithUser;
+    res.send(project);
   }
 
   /**
