@@ -45,15 +45,14 @@ router.route('/board')
    */
   .get(wrapper(userController.getUserBoard.bind(userController)));
 
-  /**
+/**
    * signout the user.
    * @route GET /users/signout
    * @group Users - Operations on users
    * @returns {Array<Object>} The user board.
    */
-router.route("/signout")
-  .get(wrapper(userController.signOut.bind(userController))
-  );
+router.route('/signout')
+  .get(wrapper(userController.signOut.bind(userController)));
 
 router.route('/:id')
 
