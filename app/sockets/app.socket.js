@@ -41,7 +41,9 @@ export default (io) => {
       socket.leave(projectId);
       console.log(`Socket ${socket.id} left project ${projectId}`);
     });
-
+    socket.on('newCollaborator', () => {
+      io.to(user.project.id).emit('refreshCollaborators');
+    });
     socket.on('boardEvent', () => {
       io.to(user.project.id).emit('refreshBoard');
     });

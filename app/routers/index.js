@@ -12,8 +12,8 @@ import authMiddleware from '../middlewares/authentification.middleware.js';
 import ApiError from '../errors/api.error.js';
 
 const router = Router();
-router.use('/users', userRouter);
 router.use(authMiddleware);
+router.use('/users', userRouter);
 router.use('/lists', listRouter);
 router.use('/cards', cardRouter);
 router.use('/tags', tagRouter);
