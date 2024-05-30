@@ -10,10 +10,14 @@ import mongooseConnexion from './app/models/mongooseClient.js';
 import socketApp from './app/sockets/app.socket.js';
 import rateLimiter from './app/middlewares/rateLimiter.middleware.js';
 import bodySanitizer from './app/middlewares/bodySanitizer.middleware.js';
+import swagger from './app/services/swagger/index.js';
 
 await mongooseConnexion();
 
 const app = express();
+
+swagger(app);
+
 const httpServer = createServer(app);
 
 const io = new WebSocketServer(httpServer, {
@@ -29,6 +33,8 @@ socketApp(io);
 
 const corsOptions = {
   origin: process.env.FRONT_URL || 'http://localhost:5173',
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200,
 };

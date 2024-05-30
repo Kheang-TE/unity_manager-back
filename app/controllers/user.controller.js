@@ -1,7 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
-/* eslint-disable import/prefer-default-export */
-/* eslint-disable no-unused-vars */
-
 import bcrypt from 'bcrypt';
 import Jwt from 'jsonwebtoken';
 import {
@@ -30,7 +26,7 @@ export default class userController extends coreController {
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       next(
-        new ApiError(409, 'Conflict', 'User with that email already exists.'),
+        new ApiError(409, 'Conflict', 'User already exists'),
       );
     }
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
@@ -43,7 +39,7 @@ export default class userController extends coreController {
       code_color,
       password: hashedPassword,
     });
-    res.status(201).json(user);
+    res.status(201).json({ message: 'User created' });
   }
 
   /**
