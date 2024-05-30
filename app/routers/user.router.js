@@ -4,6 +4,7 @@ import wrapper from '../middlewares/controller.wrapper.js';
 import createSchema from '../schemas/user.create.schema.js';
 import updateSchema from '../schemas/user.update.schema.js';
 import signinSchema from '../schemas/user.signin.schema.js';
+import authMiddleware from '../middlewares/authentification.middleware.js';
 import validationMiddleware from '../middlewares/validation.middleware.js';
 /**
  * A User object
@@ -49,7 +50,7 @@ router
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  */
-  .get(wrapper(userController.getAll.bind(userController)))
+  .get(authMiddleware, wrapper(userController.getAll.bind(userController)))
 
 /**
  * POST /users
@@ -85,7 +86,7 @@ router.route('/signout')
    * @return {ApiError} 400 - bad input response
    * @return {ApiError} 500 - internal server error response
    * */
-  .get(wrapper(userController.signOut.bind(userController)));
+  .get(authMiddleware, wrapper(userController.signOut.bind(userController)));
 
 router.route('/:id')
 
@@ -98,7 +99,7 @@ router.route('/:id')
   * @return {ApiError} 400 - bad input response
   * @return {ApiError} 500 - internal server error response
   */
-  .get(wrapper(userController.getOne.bind(userController)))
+  .get(authMiddleware, wrapper(userController.getOne.bind(userController)))
   /**
    * PATCH /users/{id}
    * @summary Update a user
@@ -109,7 +110,7 @@ router.route('/:id')
    * @return {ApiError} 400 - bad input response
    * @return {ApiError} 500 - internal server error response
    */
-  .patch(validationMiddleware(updateSchema, 'body'), wrapper(userController.updateUser.bind(userController)))
+  .patch(authMiddleware, validationMiddleware(updateSchema, 'body'), wrapper(userController.updateUser.bind(userController)))
 
   /**
    * DELETE /users/{id}
@@ -120,6 +121,6 @@ router.route('/:id')
    * @return {ApiError} 400 - bad input response
    * @return {ApiError} 500 - internal server error response
    */
-  .delete(wrapper(userController.deleteOne.bind(userController)));
+  .delete(authMiddleware, wrapper(userController.deleteOne.bind(userController)));
 
 export default router;
