@@ -13,12 +13,12 @@ import ApiError from '../errors/api.error.js';
 
 const router = Router();
 router.use('/users', userRouter);
+router.use(authMiddleware);
 router.use('/lists', listRouter);
 router.use('/cards', cardRouter);
 router.use('/tags', tagRouter);
 router.use('/projects', projectRouter);
 router.use('/messages', messageRouter);
-router.use(authMiddleware);
 
 // Middleware 404 (API)
 router.use((req, res, next) => {
