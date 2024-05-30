@@ -154,6 +154,7 @@ export default class projectController extends coreController {
   static async getProjectByUser(req, res, next) {
     const userId = req.user.id;
     const project = await Project.findAll({
+      order: [['name', 'ASC']],
       include: [{
         model: User, // The collaborators of the project
         attributes: ['id'],
