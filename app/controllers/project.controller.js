@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import ApiError from '../errors/api.error.js';
 import {
-  Project, User, List, Card, Tag, Message,
+  Project, User, List, Card, Tag, Message, sequelize,
 } from '../models/index.js';
 import coreController from './core.controller.js';
 
@@ -176,6 +176,28 @@ export default class projectController extends coreController {
     project.message = messages;
 
     return res.json(project);
+  }
+
+  static async createCollaborators(req, res) {
+    console.log('im here', req.body);
+    const { id } = req.params;
+    const collaboratorEmail = req.body.email;
+    const project = await Project.findByPk(id);
+    const collaborator = await User.findOne({ where: { email: collaboratorEmail } });
+    await project.addCollaborator(collaborator);
+
+    return res.send(collaborator);
+  }
+
+  static async getLastCollaborator(req, res) {
+    const { id } = req.params;
+    const project = await Project.findByPk(id);
+    const collaborator = await project.getCollaborators({
+      attributes: ['id', 'firstname', 'lastname', 'code_color'], // Sélectionnez les attributs que vous souhaitez récupérer des collaborateurs
+      order: [[sequelize.col('project_has_user.created_at'), 'DESC']], // Utilisez sequelize.col pour référencer la colonne correctement
+      limit: 1, // Récupère uniquement le collaborateur le plus récemment ajouté
+    });
+    return res.send(collaborator[0]);
   }
 
   static async deleteOne(req, res, next) {

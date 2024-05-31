@@ -14,6 +14,7 @@ export default (req, res, next) => {
       next(new ApiError(401, 'Unauthorized', 'No token provided'));
     }
     const decoded = Jwt.verify(token, process.env.JWT_SECRET);
+
     if (!decoded) {
       next(new ApiError(401, 'Unauthorized', 'Invalid token'));
     }
