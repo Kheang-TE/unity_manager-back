@@ -177,4 +177,17 @@ export default class projectController extends coreController {
 
     return res.json(project);
   }
+
+  static async deleteOne(req, res, next) {
+    const id = +req.params.id;
+    if (!Number.isInteger(id)) {
+      next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
+    }
+    const result = await Project.findByPk(id);
+    if (!result) {
+      next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
+    }
+    await result.destroy({ hooks: true });
+    return res.status(204).end();
+  }
 }
