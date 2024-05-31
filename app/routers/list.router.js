@@ -67,7 +67,7 @@ router
  * GET /lists
  * @summary Get all lists
  * @tags Lists
- * @return {Array<Lists>} 200 - success response - application/json
+ * @return {Array<List>} 200 - success response - application/json
  * @return {ApiError} 400 - bad input response
  * @return {ApiError} 500 - internal server error response
  * @security bearer
@@ -77,8 +77,8 @@ router
    * POST /lists
    * @summary Create a new list
    * @tags Lists
-   * @param {Object} request.body - List data to create.
-   * @returns {list} 201 - created response
+   * @param {object} request.body - List data to create.
+   * @returns {List} 201 - created response
    * @returns {ApiError} 400 - bad input response
    * @returns {ApiError} 500 - internal server error response
    * @security bearer
