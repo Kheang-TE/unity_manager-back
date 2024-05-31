@@ -4,7 +4,8 @@ VALUES
 ('john.doe@example.com', 'password123', 'John', 'Doe', '#a1b2c3', NOW(), NOW()),
 ('jane.smith@example.com', 'password123', 'Jane', 'Smith', '#b2c3d4', NOW(), NOW()),
 ('alice.jones@example.com', 'password123', 'Alice', 'Jones', '#c3d4e5', NOW(), NOW()),
-('bob.brown@example.com', 'password123', 'Bob', 'Brown', '#d4e5f6', NOW(), NOW());
+('bob.brown@example.com', 'password123', 'Bob', 'Brown', '#d4e5f6', NOW(), NOW()),
+('kheang@oclock.com', '$2b$10$PtUsimIZogwogiEfIlhXte7BIcgu.sCZ1AwiBJAIe3dcgQ4fp6zSW', 'Kheang', 'TE', '#d4e5f6', NOW(), NOW());
 
 -- Insert data into "project"
 INSERT INTO "project" (name, owner_id, created_at, updated_at)
@@ -32,11 +33,11 @@ VALUES
 -- Insert data into "project_has_user"
 INSERT INTO "project_has_user" (project_id, user_id, created_at, updated_at)
 VALUES
-(1, 1, NOW(), NOW()),
+(1, 5, NOW(), NOW()),
 (1, 2, NOW(), NOW()),
-(2, 3, NOW(), NOW()),
+(2, 5, NOW(), NOW()),
 (2, 4, NOW(), NOW()),
-(3, 1, NOW(), NOW()),
+(3, 5, NOW(), NOW()),
 (3, 3, NOW(), NOW());
 
 -- Insert data into "tag"
