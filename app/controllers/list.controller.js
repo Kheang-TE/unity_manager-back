@@ -18,17 +18,19 @@ export default class listController extends coreController {
     const { id } = req.params;
     const result = await List.findAll({
       where: { project_id: id },
+      separate: true,
+      order: [['position', 'ASC']],
       include: [{
         model: Card, // Les cartes des listes
         attributes: ['id', 'name', 'content', 'position'],
         as: 'cards',
+        separate: true,
         order: [['position', 'ASC']],
         include: [{
           model: User, // L'utilisateur associé à chaque carte
           attributes: ['firstname', 'lastname'],
           through: { attributes: [] },
           as: 'users',
-          order: [['position', 'ASC']],
         }],
       }],
     });

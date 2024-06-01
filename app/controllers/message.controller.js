@@ -31,7 +31,7 @@ const messageController = {
     if (!message) {
       return next(new ApiError(404, 'Data not found', `Message not found with the provided the ID: ${+id}`));
     }
-    res.send(message);
+    return res.send(message);
   },
   /**
    * Retrieves all messages from the database and sends them as a response.
@@ -61,7 +61,7 @@ const messageController = {
       return next(new ApiError(404, 'Data not found', `${Message.name} not found with the provided the ID: ${id}`));
     }
     await message.deleteOne();
-    res.send({ message: `${Message.name} deleted successfully!` });
+    return res.send({ message: `${Message.name} deleted successfully!` });
   },
   /**
  * Updates a message in the database with the provided ID using the data from the request body.

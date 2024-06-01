@@ -104,11 +104,14 @@ export default class projectController extends coreController {
         model: List, // The lists of the project
         attributes: ['id', 'name', 'position', 'code_color'],
         as: 'lists',
+        separate: true,
         order: [['position', 'ASC']],
         include: [{
           model: Card, // The cards of the list
           attributes: ['id', 'name', 'content', 'list_id', 'position'],
           as: 'cards',
+          separate: true,
+          order: [['position', 'ASC']],
           include: [{
             model: User, // The users of the card
             attributes: ['firstname', 'lastname'],
@@ -124,7 +127,6 @@ export default class projectController extends coreController {
           }],
         }],
       }],
-
     });
     const messages = await Message.find({ project_id: id });
     const messagesWithUser = await Promise.all(messages.map(async (message) => {
@@ -152,6 +154,7 @@ export default class projectController extends coreController {
   static async getProjectByUser(req, res, next) {
     const userId = req.user.id;
     const project = await Project.findAll({
+      order: [['name', 'ASC']],
       include: [{
         model: User, // The collaborators of the project
         attributes: ['id'],
@@ -195,5 +198,18 @@ export default class projectController extends coreController {
       limit: 1, // Récupère uniquement le collaborateur le plus récemment ajouté
     });
     return res.send(collaborator[0]);
+  }
+
+  static async deleteOne(req, res, next) {
+    const id = +req.params.id;
+    if (!Number.isInteger(id)) {
+      next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
+    }
+    const result = await Project.findByPk(id);
+    if (!result) {
+      next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
+    }
+    await result.destroy({ hooks: true });
+    return res.status(204).end();
   }
 }
