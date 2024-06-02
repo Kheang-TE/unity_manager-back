@@ -54,4 +54,10 @@ router.route('/:id')
    */
   .delete(wrapper(cardController.deleteOne.bind(cardController)));
 
+router.route('/:id/tags')
+  .get(wrapper(cardController.getCardWithTags.bind(cardController)))
+  .post(validationMiddleware(createSchema, 'body'), wrapper(cardController.addTagsToCard.bind(cardController)))
+  .patch(validationMiddleware(updateSchema, 'body'), wrapper(cardController.updateTagsInCard.bind(cardController)))
+  .delete(wrapper(cardController.removeTagsFromCard.bind(cardController)));
+
 export default router;

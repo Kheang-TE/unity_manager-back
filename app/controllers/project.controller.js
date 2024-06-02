@@ -216,7 +216,7 @@ export default class projectController extends coreController {
     if (!result) {
       next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
-    await result.destroy({ hooks: true });
+    await result.destroy();
     return res.status(204).end();
   }
 }
