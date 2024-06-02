@@ -123,6 +123,11 @@ export default class projectController extends coreController {
             as: 'tags',
           }],
         }],
+      },
+      {
+        model: Tag, // The tags of the card
+        attributes: ['id', 'name', 'code_color'],
+        as: 'tags',
       }],
 
     });

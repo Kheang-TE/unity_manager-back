@@ -86,6 +86,18 @@ User.belongsToMany(Project, {
   foreignKey: 'user_id',
 });
 
+// Project <--> Tag (One-to-Many)
+Project.hasMany(Tag, {
+  as: 'tags',
+  foreignKey: 'project_id',
+  onDelete: 'CASCADE',
+});
+
+Tag.belongsTo(Project, {
+  as: 'project',
+  foreignKey: 'project_id',
+});
+
 export {
   Card, List, Tag, Project, User, sequelize,
 };
