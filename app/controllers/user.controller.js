@@ -21,7 +21,11 @@ export default class userController extends coreController {
    */
   static async createUser(req, res, next) {
     const {
-      firstname, lastname, email, password, code_color,
+      firstname,
+      lastname,
+      email,
+      password,
+      code_color,
     } = req.body;
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
@@ -54,7 +58,12 @@ export default class userController extends coreController {
   static async updateUser(req, res, next) {
     const userId = +req.user.id;
     const {
-      firstname, lastname, email, new_password, actual_password, code_color,
+      firstname,
+      lastname,
+      email,
+      new_password,
+      actual_password,
+      code_color,
     } = req.body;
     if (!Number.isInteger(userId)) {
       return next(
@@ -195,6 +204,6 @@ export default class userController extends coreController {
         },
       ],
     });
-    res.json(result);
+    return res.json(result);
   }
 }

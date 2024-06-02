@@ -30,6 +30,11 @@ Project.hasMany(List, {
   onDelete: 'CASCADE',
 });
 
+List.belongsTo(Project, {
+  as: 'project',
+  foreignKey: 'project_id',
+});
+
 // Card <--> Tag (Many-to-Many)
 Card.belongsToMany(Tag, {
   as: 'tags',
@@ -42,7 +47,6 @@ Tag.belongsToMany(Card, {
   as: 'cards',
   through: 'card_has_tag',
   foreignKey: 'tag_id',
-  onDelete: 'CASCADE',
 });
 
 // Card <--> User (Many-to-Many)
@@ -71,6 +75,7 @@ Project.belongsTo(User, {
 User.hasMany(Project, {
   as: 'ownedProjects',
   foreignKey: 'owner_id',
+  onDelete: 'CASCADE',
 });
 
 // Project <--> User (Many-to-Many)
@@ -78,12 +83,14 @@ Project.belongsToMany(User, {
   as: 'collaborators',
   through: 'project_has_user',
   foreignKey: 'project_id',
+
 });
 
 User.belongsToMany(Project, {
   as: 'projects',
   through: 'project_has_user',
   foreignKey: 'user_id',
+  onDelete: true,
 });
 
 // Project <--> Tag (One-to-Many)
