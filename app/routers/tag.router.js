@@ -54,4 +54,6 @@ router.route('/:id')
    */
   .delete(wrapper(tagController.deleteOne.bind(tagController)));
 
+router.route('/projects/:id').get(wrapper(tagController.getByProject.bind(tagController)));
+
 export default router;

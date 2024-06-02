@@ -131,6 +131,8 @@ export default class projectController extends coreController {
         model: Tag, // The tags of the card
         attributes: ['id', 'name', 'code_color'],
         as: 'tags',
+        separate: true,
+        order: [['name', 'ASC']],
       }],
     });
     const messages = await Message.find({ project_id: id });
