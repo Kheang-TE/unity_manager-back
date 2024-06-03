@@ -5,4 +5,5 @@ export default Joi.object({
   content: Joi.string().min(1),
   position: Joi.number().greater(0),
   list_id: Joi.number().integer().greater(0),
+  tags: Joi.array().items(Joi.number().integer().greater(0)),
 }).min(1);

@@ -52,4 +52,20 @@ export default class tagController extends coreController {
 
     return res.json({ message: 'Association between card and tag was successfully deleted.' });
   }
+
+  /**
+   * Retrieves all tags associated with a project based on the provided project ID.
+   *
+   * @param {Object} req - The request object
+   * @param {Object} res - The response object
+   * @return {Object} The found tag object or an error message
+   */
+  static async getByProject(req, res) {
+    const id = +req.params.id;
+    const tags = await Tag.findAll({
+      where: { project_id: id },
+      order: [['name', 'ASC']],
+    });
+    return res.send(tags);
+  }
 }

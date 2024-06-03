@@ -126,6 +126,13 @@ export default class projectController extends coreController {
             as: 'tags',
           }],
         }],
+      },
+      {
+        model: Tag, // The tags of the card
+        attributes: ['id', 'name', 'code_color'],
+        as: 'tags',
+        separate: true,
+        order: [['name', 'ASC']],
       }],
     });
     const messages = await Message.find({ project_id: id });
@@ -210,7 +217,7 @@ export default class projectController extends coreController {
     if (!result) {
       next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
-    await result.destroy({ hooks: true });
+    await result.destroy();
     return res.status(204).end();
   }
 }

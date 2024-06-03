@@ -41,12 +41,12 @@ VALUES
 (3, 3, NOW(), NOW());
 
 -- Insert data into "tag"
-INSERT INTO "tag" (name, code_color, created_at, updated_at)
+INSERT INTO "tag" (name, code_color, project_id, created_at, updated_at)
 VALUES
-('Urgent', '#ff1122', NOW(), NOW()),
-('Optional', '#2211ff', NOW(), NOW()),
-('Important', '#33cc33', NOW(), NOW()),
-('Review', '#ffaa00', NOW(), NOW());
+('Urgent', '#ff1122', 1, NOW(), NOW()),
+('Optional', '#2211ff', 1, NOW(), NOW()),
+('Important', '#33cc33', 2, NOW(), NOW()),
+('Review', '#ffaa00', 3, NOW(), NOW());
 
 -- Insert data into "card_has_tag"
 INSERT INTO "card_has_tag" (tag_id, card_id, created_at, updated_at)
