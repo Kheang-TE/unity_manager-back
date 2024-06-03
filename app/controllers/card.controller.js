@@ -58,21 +58,26 @@ export default class cardController extends coreController {
     if (!Number.isInteger(id)) {
       return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
-    const input = req.body;
+    const {
+      name, content, list_id, position,
+    } = req.body;
     const card = await this.tableName.findByPk(id);
     if (!card) {
       return next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
-    await card.update(input);
-
-    const { tags } = req.body;
-    tags.forEach(async (tagId) => {
-      const tag = await Tag.findByPk(tagId);
-      if (!tag) {
-        next(new ApiError(404, 'Data not found', `Tag not found with the provided the ID: ${tagId}`));
-      }
-      await card.addTag(tag);
+    await card.update({
+      name, content, list_id, position,
     });
+    if (req.body.tags.length > 0) {
+      const { tags } = req.body;
+      tags.forEach(async (tagId) => {
+        const tag = await Tag.findByPk(tagId);
+        if (!tag) {
+          next(new ApiError(404, 'Data not found', `Tag not found with the provided the ID: ${tagId}`));
+        }
+        await card.addTag(tag);
+      });
+    }
 
     return res.status(201).json({ message: 'Card was successfully updated' });
   }
