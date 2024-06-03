@@ -21,15 +21,17 @@ export default class cardController extends coreController {
     const card = await Card.create({
       name, content, list_id, position,
     });
-    tags.forEach(async (tagId) => {
-      const tag = await Tag.findByPk(tagId);
-      if (!tag) {
-        res.status(404).json({
-          error: `Tag not found with the provided the ID: ${tagId}`,
-        });
-      }
-      await card.addTag(tag);
-    });
+    if (tags && tags.length > 0) {
+      tags.forEach(async (tagId) => {
+        const tag = await Tag.findByPk(tagId);
+        if (!tag) {
+          res.status(404).json({
+            error: `Tag not found with the provided the ID: ${tagId}`,
+          });
+        }
+        await card.addTag(tag);
+      });
+    }
     return res.status(201).json({ message: 'Card was successfully created' });
   }
 
@@ -68,7 +70,7 @@ export default class cardController extends coreController {
     await card.update({
       name, content, list_id, position,
     });
-    if (req.body.tags.length > 0) {
+    if (req.body.tags && req.body.tags.length > 0) {
       const { tags } = req.body;
       tags.forEach(async (tagId) => {
         const tag = await Tag.findByPk(tagId);
