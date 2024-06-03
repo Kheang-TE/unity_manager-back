@@ -174,7 +174,8 @@ export default class projectController extends coreController {
     });
 
     if (project.length === 0) {
-      return next(new ApiError(404, 'No project found', 'No project found'));
+      // the user has no project
+      return res.status(200).json([]);
     }
 
     // Search for messages
