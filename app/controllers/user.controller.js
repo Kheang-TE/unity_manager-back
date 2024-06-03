@@ -21,29 +21,26 @@ export default class userController extends coreController {
    */
   static async createUser(req, res, next) {
     const {
-      firstname,
-      lastname,
-      email,
-      password,
-      code_color,
+      firstname, lastname, email, password, code_color,
     } = req.body;
-    const existingUser = await User.findOne({ where: { email } });
+    const lowercaseEmail = email.toLowerCase();
+    const existingUser = await User.findOne({
+      where: { email: lowercaseEmail },
+    });
     if (existingUser) {
-      next(
-        new ApiError(409, 'Conflict', 'User already exists'),
-      );
+      return next(new ApiError(409, 'Conflict', 'User already exists'));
     }
     const nbOfSaltRounds = parseInt(process.env.NB_OF_SALT_ROUNDS, 10) || 10;
     const hashedPassword = await bcrypt.hash(password, nbOfSaltRounds);
 
-    const user = await User.create({
+    await User.create({
       firstname,
       lastname,
-      email,
+      email: lowercaseEmail,
       code_color,
       password: hashedPassword,
     });
-    res.status(201).json({ message: 'User created' });
+    return res.status(201).json({ message: 'User created' });
   }
 
   /**
