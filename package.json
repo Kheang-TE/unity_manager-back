@@ -1,11 +1,16 @@
 {
   "name": "projet-gestionnaire-projet-back",
-  "version": "1.0.0",
+  "version": "0.1.0",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "test": "mocha app/tests/**.test.js ",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "start": "node index.js",
+    "seed": "psql -d unity_manager -f ./db/seeding/seed.sql",
+    "deploy": "sqitch --chdir db/migrations deploy",
+    "revert": "sqitch --chdir db/migrations revert ",
+    "reset": "npm run revert && npm run deploy && npm run seed"
   },
   "keywords": [],
   "author": "",
