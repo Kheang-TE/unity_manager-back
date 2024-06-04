@@ -22,7 +22,7 @@ const httpServer = createServer(app);
 
 const io = new WebSocketServer(httpServer, {
   cors: {
-    origin: process.env.FRONT_URL || 'http://localhost:5173',
+    origin: process.env.FRONT_URL,
     methods: ['GET', 'POST'],
     credentials: true,
   },
@@ -32,7 +32,7 @@ app.use(cookieParser());
 socketApp(io);
 
 const corsOptions = {
-  origin: process.env.FRONT_URL || 'http://localhost:5173',
+  origin: process.env.FRONT_URL,
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200,
