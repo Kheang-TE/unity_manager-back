@@ -1,12 +1,8 @@
-/**
- * @typedef {object} ApiJsonError - Error response
- * @property {string} error.required - Error message
- * @example
- * {
- *  "error": "Bad request"
- * }
- */
+import mongoose from 'mongoose';
 
+/**
+* Middleware to handle errors and return the appropriate status code and message.
+*/
 export default (err, req, res, next) => {
   let {
     status, message, details,
@@ -22,6 +18,11 @@ export default (err, req, res, next) => {
     status = 400;
     message = 'Foreign_key_violation';
     details = err.original?.detail || err.parent?.detail;
+  }
+
+  // Mongoose error: Check if the error is a cast error and if the path is '_id'
+  if (err instanceof mongoose.Error.CastError && err.path === '_id') {
+    return res.status(400).json({ message: 'Invalid ID format' });
   }
 
   if (!status) {

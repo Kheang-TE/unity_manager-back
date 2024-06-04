@@ -1,4 +1,5 @@
 // eslint-disable-next-line import/no-unresolved, import/extensions
+import ApiError from '../errors/api.error.js';
 import { Tag } from '../models/index.js';
 import coreController from './core.controller.js';
 
@@ -36,23 +37,35 @@ export default class tagController extends coreController {
    *
    * @param {Object} req - The request object
    * @param {Object} res - The response object
+   * @param {Function} next - The next middleware function
    * @return {Object} The deleted tag object or an error message
    */
-  static async deleteAssociatTagCard(req, res) {
-    try {
-      const cardId = +req.params.card_id;
-      const tagId = +req.params.tag_id;
+  static async deleteAssociatTagCard(req, res, next) {
+    const cardId = +req.params.card_id;
+    const tagId = +req.params.tag_id;
 
-      const findTag = await Tag.findOneAndDelete({ card_id: cardId, tag_id: tagId });
+    const findTag = await Tag.findOneAndDelete({ card_id: cardId, tag_id: tagId });
 
-      if (!findTag) {
-        return res.status(404).json({ error: 'The association between the card and tag could not be found.' });
-      }
-
-      return res.json({ message: 'Association between card and tag was successfully deleted.' });
-    } catch (error) {
-      console.error(error);
-      return res.status(500).json({ error: 'An unexpected server error occurred' });
+    if (!findTag) {
+      return next(new ApiError(404, 'The association between the card and tag could not be found.'));
     }
+
+    return res.json({ message: 'Association between card and tag was successfully deleted.' });
+  }
+
+  /**
+   * Retrieves all tags associated with a project based on the provided project ID.
+   *
+   * @param {Object} req - The request object
+   * @param {Object} res - The response object
+   * @return {Object} The found tag object or an error message
+   */
+  static async getByProject(req, res) {
+    const id = +req.params.id;
+    const tags = await Tag.findAll({
+      where: { project_id: id },
+      order: [['name', 'ASC']],
+    });
+    return res.send(tags);
   }
 }

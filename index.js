@@ -1,21 +1,57 @@
+import 'dotenv/config';
+import cors from 'cors';
 import express from 'express';
-import dotenv from 'dotenv';
+import morgan from 'morgan';
+import { createServer } from 'http';
+import { Server as WebSocketServer } from 'socket.io';
+import cookieParser from 'cookie-parser';
 import router from './app/routers/index.js';
 import mongooseConnexion from './app/models/mongooseClient.js';
-
-dotenv.config();
-
-const port = process.env.PORT || '3000';
-const app = express();
+import socketApp from './app/sockets/app.socket.js';
+import rateLimiter from './app/middlewares/rateLimiter.middleware.js';
+import bodySanitizer from './app/middlewares/bodySanitizer.middleware.js';
+import swagger from './app/services/swagger/index.js';
 
 await mongooseConnexion();
 
-app.use(express.json());
+const app = express();
 
+swagger(app);
+
+const httpServer = createServer(app);
+
+const io = new WebSocketServer(httpServer, {
+  cors: {
+    origin: process.env.FRONT_URL || 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+    credentials: true,
+  },
+});
+app.use(rateLimiter);
+app.use(cookieParser());
+socketApp(io);
+
+const corsOptions = {
+  origin: process.env.FRONT_URL || 'http://localhost:5173',
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use((req, res, next) => {
+  req.io = io;
+  next();
+});
+
+app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(bodySanitizer);
+app.use(cors(corsOptions));
+app.use(morgan('combined'));
 app.use(router);
 
-app.listen(port, () => {
+const port = process.env.PORT || 3000;
+httpServer.listen(port, () => {
   console.log(`Server ready: http://localhost:${port}`);
 });

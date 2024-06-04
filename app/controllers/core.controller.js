@@ -12,9 +12,14 @@ export default class coreController {
    * @param {Object} res - The response object
    * @return {Object} The JSON response containing all retrieved data
    */
-  static async getAll(req, res) {
+  static async getAll(req, res, next) {
     const results = await this.tableName.findAll();
-    res.json(results);
+
+    if (!results) {
+      return next(new ApiError(404, 'Data not found', `${this.stringTableName} not found`));
+    }
+
+    return res.json(results);
   }
 
   /**
@@ -22,16 +27,19 @@ export default class coreController {
    *
    * @param {Object} req - The request object
    * @param {Object} res - The response object
+   * @param {Function} next - The next middleware function
    * @return {Object} The JSON response containing all retrieved data
    */
-  static async getOne(req, res) {
+  static async getOne(req, res, next) {
     const id = +req.params.id;
     if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+      next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
+
     const result = await this.tableName.findByPk(id);
+
     if (!result) {
-      throw new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`);
+      return next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
     return res.json(result);
   }
@@ -43,14 +51,14 @@ export default class coreController {
    * @param {Object} res - The response object
    * @return {Object} No content response
    */
-  static async deleteOne(req, res) {
+  static async deleteOne(req, res, next) {
     const id = +req.params.id;
     if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+      next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
     const result = await this.tableName.findByPk(id);
     if (!result) {
-      throw new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`);
+      next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
     await result.destroy();
     return res.status(204).end();
@@ -76,15 +84,15 @@ export default class coreController {
    * @param {Object} res - The response object to send the updated record
    * @return {Object} The updated record as a JSON response
    */
-  static async update(req, res) {
+  static async update(req, res, next) {
     const id = +req.params.id;
     if (!Number.isInteger(id)) {
-      throw new ApiError(400, 'Bad Request', 'The provided ID is not a number');
+      return next(new ApiError(400, 'Bad Request', 'The provided ID is not a number'));
     }
     const input = req.body;
     const result = await this.tableName.findByPk(id);
     if (!result) {
-      throw new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`);
+      return next(new ApiError(404, 'Data not found', `${this.stringTableName} not found with the provided the ID: ${id}`));
     }
     await result.update(input);
     return res.json(result);

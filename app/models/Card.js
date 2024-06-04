@@ -16,6 +16,11 @@ Card.init({
     type: DataTypes.FLOAT,
     allowNull: false,
   },
+  list_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    onDelete: 'CASCADE',
+  },
 }, {
   sequelize,
   tableName: 'card',

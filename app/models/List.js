@@ -15,7 +15,7 @@ List.init({
   code_color: {
     type: DataTypes.TEXT(7), // Hexadecimal code #FF00FF
     allowNull: false,
-    defaultValue: '#FFFFFF', // White
+    defaultValue: '#257698', // blue
   },
 
 }, {

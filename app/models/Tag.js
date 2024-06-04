@@ -14,6 +14,10 @@ Tag.init({
     allowNull: false,
     defaultValue: '#FFFFFF',
   },
+  project_id: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
 }, {
   sequelize,
   tableName: 'tag',
