@@ -123,7 +123,7 @@ export default class userController extends coreController {
     const accessToken = Jwt.sign({ id: user.id }, process.env.JWT_SECRET);
     res.cookie('token', accessToken, {
       httpOnly: true, // Le cookie n'est pas accessible via JavaScript côté client
-      secure: false, // Le cookie est envoyé uniquement sur des connexions HTTPS
+      secure: true, // Le cookie est envoyé uniquement sur des connexions HTTPS
       maxAge: 24 * 60 * 60 * 1000, // Temps d'expiration du cookie en millisecondes
       sameSite: 'strict', // Le cookie est envoyé uniquement avec des requêtes du même site
     });
@@ -136,7 +136,7 @@ export default class userController extends coreController {
   static async signOut(req, res) {
     res.clearCookie('token', {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'strict',
     });
     res.status(200).json({ message: 'Sign out successful' });
