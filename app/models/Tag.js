@@ -17,6 +17,7 @@ Tag.init({
   project_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+onDelete: 'CASCADE',
   },
 }, {
   sequelize,

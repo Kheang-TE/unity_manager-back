@@ -22,17 +22,18 @@ const httpServer = createServer(app);
 
 const io = new WebSocketServer(httpServer, {
   cors: {
-    origin: process.env.FRONT_URL || 'http://localhost:5173',
+    origin: 'process.env.FRONT_URL',
     methods: ['GET', 'POST'],
     credentials: true,
   },
 });
+app.set('trust proxy', 1);
 app.use(rateLimiter);
 app.use(cookieParser());
 socketApp(io);
 
 const corsOptions = {
-  origin: process.env.FRONT_URL || 'http://localhost:5173',
+  origin: 'process.env.FRONT_URL',
   allowedHeaders: ['Content-Type', 'Authorization'],
   credentials: true,
   optionsSuccessStatus: 200,
@@ -52,6 +53,6 @@ app.use(morgan('combined'));
 app.use(router);
 
 const port = process.env.PORT || 3000;
-httpServer.listen(port, () => {
+httpServer.listen(port,'0.0.0.0', () => {
   console.log(`Server ready: http://localhost:${port}`);
 });

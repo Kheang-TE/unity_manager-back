@@ -10,7 +10,7 @@
     "seed": "psql -d unity_manager -f ./db/seeding/seed.sql",
     "deploy": "sqitch --chdir db/migrations deploy",
     "revert": "sqitch --chdir db/migrations revert ",
-    "reset": "npm run revert && npm run deploy && npm run seed"
+    "reset": "echo yes | npm run revert && npm run deploy && npm run seed"
   },
   "keywords": [],
   "author": "",

@@ -11,7 +11,7 @@ const options = {
   },
   baseDir: './app/routers',
   filesPattern: './**/*.js',
-  swaggerUIPath: '/api-docs', // Expose l'interface utilisateur Swagger
+  swaggerUIPath: '/api/api-docs', // Expose l'interface utilisateur Swagger
   exposeSwaggerUI: true,
 };
 
