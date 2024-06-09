@@ -24,3 +24,4 @@ export default (req, res, next) => {
     next(new ApiError(401, 'Unauthorized', "You don't have access to this resource"));
   }
 };
+

@@ -12,13 +12,14 @@ import authMiddleware from '../middlewares/authentification.middleware.js';
 import ApiError from '../errors/api.error.js';
 
 const router = Router();
-router.use('/api/users', userRouter);
-router.use(authMiddleware);
-router.use('/api/lists', listRouter);
-router.use('/api/cards', cardRouter);
-router.use('/api/tags', tagRouter);
-router.use('/api/projects', projectRouter);
-router.use('/api/messages', messageRouter);
+router.use('/users', userRouter);
+router.use(authMidd/leware);
+router.use('/lists', listRouter);
+router.use('/cards', cardRouter);
+router.use('/tags', tagRouter);
+router.use('/projects', projectRouter);
+router.use('/messages', messageRouter);
+
 // Middleware 404 (API)
 router.use((req, res, next) => {
   next(new ApiError(404, 'Ressource not found'));
